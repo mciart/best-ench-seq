@@ -27,7 +27,8 @@
         "suitableWeapons": [
             "sword",
             "axe",
-            "mace"
+            "mace",
+            "spear"
         ]
     },
     {
@@ -107,7 +108,8 @@
             "shears",
             "flint_and_steel",
             "carrot_on_a_stick",
-            "warped_fungus_on_a_stick"
+            "warped_fungus_on_a_stick",
+            "spear"
         ]
     },
     {
@@ -162,7 +164,8 @@
         "conflicts": [],
         "suitableWeapons": [
             "sword",
-            "mace"
+            "mace",
+            "spear"
         ]
     },
     {
@@ -262,7 +265,8 @@
         "edition": "both",
         "conflicts": [],
         "suitableWeapons": [
-            "sword"
+            "sword",
+            "spear"
         ]
     },
     {
@@ -274,7 +278,8 @@
         "edition": "both",
         "conflicts": [],
         "suitableWeapons": [
-            "sword"
+            "sword",
+            "spear"
         ]
     },
     {
@@ -346,7 +351,8 @@
             "flint_and_steel",
             "carrot_on_a_stick",
             "warped_fungus_on_a_stick",
-            "brush"
+            "brush",
+            "spear"
         ]
     },
     {
@@ -493,7 +499,8 @@
         ],
         "suitableWeapons": [
             "sword",
-            "axe"
+            "axe",
+            "spear"
         ]
     },
     {
@@ -530,7 +537,8 @@
         "suitableWeapons": [
             "sword",
             "axe",
-            "mace"
+            "mace",
+            "spear"
         ]
     },
     {
@@ -601,7 +609,8 @@
             "flint_and_steel",
             "carrot_on_a_stick",
             "warped_fungus_on_a_stick",
-            "brush"
+            "brush",
+            "spear"
         ]
     },
     {
@@ -672,6 +681,18 @@
         "conflicts": [],
         "suitableWeapons": [
             "mace"
+        ]
+    },
+    {
+        "id": "lunge",
+        "name": "突进",
+        "maxLevel": 3,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "spear"
         ]
     }
 ]

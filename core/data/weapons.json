@@ -84,6 +84,12 @@
     "icon": "mace.png"
   },
   {
+    "id": "spear",
+    "name": "矛",
+    "nameEn": "Spear",
+    "icon": "spear.png"
+  },
+  {
     "id": "shield",
     "name": "盾牌",
     "nameEn": "Shield",
