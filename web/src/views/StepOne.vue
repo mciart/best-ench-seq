@@ -18,11 +18,23 @@
     <!-- 武器选择 -->
     <div class="card">
       <div class="card-title">选择物品</div>
-      <select class="form-select" v-model="store.selectedWeaponId" @change="store.setWeapon(store.selectedWeaponId)">
-        <option v-for="w in store.weapons" :key="w.id" :value="w.id">
-          {{ w.name }} ({{ w.nameEn }})
-        </option>
-      </select>
+      <div class="weapon-grid">
+        <button
+          v-for="w in store.weapons"
+          :key="w.id"
+          class="weapon-card"
+          :class="{ 'weapon-active': store.selectedWeaponId === w.id }"
+          :title="`${w.name} (${w.nameEn})`"
+          @click="store.setWeapon(w.id)"
+        >
+          <img
+            class="weapon-icon"
+            :src="`/icons/${w.icon}`"
+            :alt="w.name"
+          >
+          <span class="weapon-name">{{ w.name }}</span>
+        </button>
+      </div>
 
       <div class="item-props">
         <div class="prop-row">
@@ -126,6 +138,62 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.weapon-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.weapon-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 4px;
+  background: var(--bg-surface-2);
+  border: 2px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: var(--font-sans);
+}
+
+.weapon-card:hover {
+  border-color: var(--color-primary-dim);
+  background: var(--bg-surface-3);
+  transform: translateY(-1px);
+}
+
+.weapon-active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-dim);
+  box-shadow: 0 0 12px var(--color-primary-glow);
+}
+
+.weapon-icon {
+  width: 32px;
+  height: 32px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.weapon-name {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  text-align: center;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.weapon-active .weapon-name {
+  color: white;
+  font-weight: 600;
 }
 
 .item-props {
