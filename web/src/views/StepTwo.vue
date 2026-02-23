@@ -51,7 +51,7 @@
               type="range"
               class="range-slider"
               min="1"
-              max="30"
+              max="120"
               step="1"
               v-model.number="store.enumTimeout"
             >
