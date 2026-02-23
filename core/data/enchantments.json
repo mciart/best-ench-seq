@@ -1,0 +1,677 @@
+[
+    {
+        "id": "aqua_affinity",
+        "name": "水下速掘",
+        "maxLevel": 1,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "helmet"
+        ]
+    },
+    {
+        "id": "bane_of_arthropods",
+        "name": "节肢杀手",
+        "maxLevel": 5,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "sharpness",
+            "smite",
+            "density",
+            "breach"
+        ],
+        "suitableWeapons": [
+            "sword",
+            "axe",
+            "mace"
+        ]
+    },
+    {
+        "id": "blast_protection",
+        "name": "爆炸保护",
+        "maxLevel": 4,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "fire_protection",
+            "projectile_protection",
+            "protection"
+        ],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots"
+        ]
+    },
+    {
+        "id": "channeling",
+        "name": "引雷",
+        "maxLevel": 1,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [
+            "riptide"
+        ],
+        "suitableWeapons": [
+            "trident"
+        ]
+    },
+    {
+        "id": "binding_curse",
+        "name": "绑定诅咒",
+        "maxLevel": 1,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots",
+            "elytra"
+        ]
+    },
+    {
+        "id": "vanishing_curse",
+        "name": "消失诅咒",
+        "maxLevel": 1,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword",
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe",
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots",
+            "bow",
+            "crossbow",
+            "trident",
+            "fishing_rod",
+            "mace",
+            "shield",
+            "elytra",
+            "shears",
+            "flint_and_steel",
+            "carrot_on_a_stick",
+            "warped_fungus_on_a_stick"
+        ]
+    },
+    {
+        "id": "depth_strider",
+        "name": "深海探索者",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "frost_walker"
+        ],
+        "suitableWeapons": [
+            "boots"
+        ]
+    },
+    {
+        "id": "efficiency",
+        "name": "效率",
+        "maxLevel": 5,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe",
+            "shears"
+        ]
+    },
+    {
+        "id": "feather_falling",
+        "name": "摔落保护",
+        "maxLevel": 4,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "boots"
+        ]
+    },
+    {
+        "id": "fire_aspect",
+        "name": "火焰附加",
+        "maxLevel": 2,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword",
+            "mace"
+        ]
+    },
+    {
+        "id": "fire_protection",
+        "name": "火焰保护",
+        "maxLevel": 4,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "blast_protection",
+            "projectile_protection",
+            "protection"
+        ],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots"
+        ]
+    },
+    {
+        "id": "flame",
+        "name": "火矢",
+        "maxLevel": 1,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "bow"
+        ]
+    },
+    {
+        "id": "fortune",
+        "name": "时运",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "silk_touch"
+        ],
+        "suitableWeapons": [
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe"
+        ]
+    },
+    {
+        "id": "frost_walker",
+        "name": "冰霜行者",
+        "maxLevel": 2,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "depth_strider"
+        ],
+        "suitableWeapons": [
+            "boots"
+        ]
+    },
+    {
+        "id": "impaling_je",
+        "name": "穿刺",
+        "maxLevel": 5,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "java",
+        "conflicts": [],
+        "suitableWeapons": [
+            "trident"
+        ]
+    },
+    {
+        "id": "infinity",
+        "name": "无限",
+        "maxLevel": 1,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [
+            "mending"
+        ],
+        "suitableWeapons": [
+            "bow"
+        ]
+    },
+    {
+        "id": "knockback",
+        "name": "击退",
+        "maxLevel": 2,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword"
+        ]
+    },
+    {
+        "id": "looting",
+        "name": "抢夺",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword"
+        ]
+    },
+    {
+        "id": "loyalty",
+        "name": "忠诚",
+        "maxLevel": 3,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "riptide"
+        ],
+        "suitableWeapons": [
+            "trident"
+        ]
+    },
+    {
+        "id": "luck_of_the_sea",
+        "name": "海之眷顾",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "fishing_rod"
+        ]
+    },
+    {
+        "id": "lure",
+        "name": "饵钓",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "fishing_rod"
+        ]
+    },
+    {
+        "id": "mending",
+        "name": "经验修补",
+        "maxLevel": 1,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "infinity"
+        ],
+        "suitableWeapons": [
+            "sword",
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe",
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots",
+            "bow",
+            "crossbow",
+            "trident",
+            "fishing_rod",
+            "mace",
+            "shield",
+            "elytra",
+            "shears",
+            "flint_and_steel",
+            "carrot_on_a_stick",
+            "warped_fungus_on_a_stick",
+            "brush"
+        ]
+    },
+    {
+        "id": "multishot",
+        "name": "多重射击",
+        "maxLevel": 1,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "piercing"
+        ],
+        "suitableWeapons": [
+            "crossbow"
+        ]
+    },
+    {
+        "id": "piercing",
+        "name": "穿透",
+        "maxLevel": 4,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "multishot"
+        ],
+        "suitableWeapons": [
+            "crossbow"
+        ]
+    },
+    {
+        "id": "power",
+        "name": "力量",
+        "maxLevel": 5,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "bow"
+        ]
+    },
+    {
+        "id": "projectile_protection",
+        "name": "弹射物保护",
+        "maxLevel": 4,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "blast_protection",
+            "fire_protection",
+            "protection"
+        ],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots"
+        ]
+    },
+    {
+        "id": "protection",
+        "name": "保护",
+        "maxLevel": 4,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "blast_protection",
+            "fire_protection",
+            "projectile_protection"
+        ],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots"
+        ]
+    },
+    {
+        "id": "punch",
+        "name": "冲击",
+        "maxLevel": 2,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "bow"
+        ]
+    },
+    {
+        "id": "quick_charge",
+        "name": "快速装填",
+        "maxLevel": 3,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "crossbow"
+        ]
+    },
+    {
+        "id": "respiration",
+        "name": "水下呼吸",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "helmet"
+        ]
+    },
+    {
+        "id": "riptide",
+        "name": "激流",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "both",
+        "conflicts": [
+            "channeling",
+            "loyalty"
+        ],
+        "suitableWeapons": [
+            "trident"
+        ]
+    },
+    {
+        "id": "sharpness",
+        "name": "锋利",
+        "maxLevel": 5,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "bane_of_arthropods",
+            "smite",
+            "density",
+            "breach"
+        ],
+        "suitableWeapons": [
+            "sword",
+            "axe"
+        ]
+    },
+    {
+        "id": "silk_touch",
+        "name": "精准采集",
+        "maxLevel": 1,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [
+            "fortune"
+        ],
+        "suitableWeapons": [
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe",
+            "shears"
+        ]
+    },
+    {
+        "id": "smite",
+        "name": "亡灵杀手",
+        "maxLevel": 5,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [
+            "bane_of_arthropods",
+            "sharpness",
+            "density",
+            "breach"
+        ],
+        "suitableWeapons": [
+            "sword",
+            "axe",
+            "mace"
+        ]
+    },
+    {
+        "id": "soul_speed",
+        "name": "灵魂疾行",
+        "maxLevel": 3,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "boots"
+        ]
+    },
+    {
+        "id": "sweeping_edge",
+        "name": "横扫之刃",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "java",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword"
+        ]
+    },
+    {
+        "id": "thorns",
+        "name": "荆棘",
+        "maxLevel": 3,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots"
+        ]
+    },
+    {
+        "id": "unbreaking",
+        "name": "耐久",
+        "maxLevel": 3,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "sword",
+            "pickaxe",
+            "axe",
+            "shovel",
+            "hoe",
+            "helmet",
+            "chestplate",
+            "leggings",
+            "boots",
+            "bow",
+            "crossbow",
+            "trident",
+            "fishing_rod",
+            "mace",
+            "shield",
+            "elytra",
+            "shears",
+            "flint_and_steel",
+            "carrot_on_a_stick",
+            "warped_fungus_on_a_stick",
+            "brush"
+        ]
+    },
+    {
+        "id": "swift_sneak",
+        "name": "迅捷潜行",
+        "maxLevel": 3,
+        "itemMultiplier": 8,
+        "bookMultiplier": 4,
+        "edition": "both",
+        "conflicts": [],
+        "suitableWeapons": [
+            "leggings"
+        ]
+    },
+    {
+        "id": "impaling_be",
+        "name": "穿刺",
+        "maxLevel": 5,
+        "itemMultiplier": 2,
+        "bookMultiplier": 1,
+        "edition": "bedrock",
+        "conflicts": [],
+        "suitableWeapons": [
+            "trident"
+        ]
+    },
+    {
+        "id": "density",
+        "name": "致密",
+        "maxLevel": 5,
+        "itemMultiplier": 1,
+        "bookMultiplier": 1,
+        "edition": "java",
+        "conflicts": [
+            "sharpness",
+            "bane_of_arthropods",
+            "smite",
+            "breach"
+        ],
+        "suitableWeapons": [
+            "mace"
+        ]
+    },
+    {
+        "id": "breach",
+        "name": "破甲",
+        "maxLevel": 4,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "java",
+        "conflicts": [
+            "sharpness",
+            "bane_of_arthropods",
+            "smite",
+            "density"
+        ],
+        "suitableWeapons": [
+            "mace"
+        ]
+    },
+    {
+        "id": "wind_burst",
+        "name": "风爆",
+        "maxLevel": 3,
+        "itemMultiplier": 4,
+        "bookMultiplier": 2,
+        "edition": "java",
+        "conflicts": [],
+        "suitableWeapons": [
+            "mace"
+        ]
+    }
+]

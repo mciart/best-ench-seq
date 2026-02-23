@@ -1,0 +1,128 @@
+[
+  {
+    "id": "sword",
+    "name": "剑",
+    "nameEn": "Sword",
+    "icon": "netherite_sword.png"
+  },
+  {
+    "id": "pickaxe",
+    "name": "镐",
+    "nameEn": "Pickaxe",
+    "icon": "netherite_pickaxe.png"
+  },
+  {
+    "id": "axe",
+    "name": "斧",
+    "nameEn": "Axe",
+    "icon": "netherite_axe.png"
+  },
+  {
+    "id": "shovel",
+    "name": "铲",
+    "nameEn": "Shovel",
+    "icon": "netherite_shovel.png"
+  },
+  {
+    "id": "hoe",
+    "name": "锄",
+    "nameEn": "Hoe",
+    "icon": "netherite_hoe.png"
+  },
+  {
+    "id": "helmet",
+    "name": "头盔",
+    "nameEn": "Helmet",
+    "icon": "netherite_helmet.png"
+  },
+  {
+    "id": "chestplate",
+    "name": "胸甲",
+    "nameEn": "Chestplate",
+    "icon": "netherite_chestplate.png"
+  },
+  {
+    "id": "leggings",
+    "name": "护腿",
+    "nameEn": "Leggings",
+    "icon": "netherite_leggings.png"
+  },
+  {
+    "id": "boots",
+    "name": "靴",
+    "nameEn": "Boots",
+    "icon": "netherite_boots.png"
+  },
+  {
+    "id": "bow",
+    "name": "弓",
+    "nameEn": "Bow",
+    "icon": "bow.png"
+  },
+  {
+    "id": "crossbow",
+    "name": "弩",
+    "nameEn": "Crossbow",
+    "icon": "crossbow_standby.png"
+  },
+  {
+    "id": "trident",
+    "name": "三叉戟",
+    "nameEn": "Trident",
+    "icon": "trident.png"
+  },
+  {
+    "id": "fishing_rod",
+    "name": "钓鱼竿",
+    "nameEn": "Fishing Rod",
+    "icon": "fishing_rod.png"
+  },
+  {
+    "id": "mace",
+    "name": "重锤",
+    "nameEn": "Mace",
+    "icon": "mace.png"
+  },
+  {
+    "id": "shield",
+    "name": "盾牌",
+    "nameEn": "Shield",
+    "icon": "shield.png"
+  },
+  {
+    "id": "elytra",
+    "name": "鞘翅",
+    "nameEn": "Elytra",
+    "icon": "elytra.png"
+  },
+  {
+    "id": "shears",
+    "name": "剪刀",
+    "nameEn": "Shears",
+    "icon": "shears.png"
+  },
+  {
+    "id": "flint_and_steel",
+    "name": "打火石",
+    "nameEn": "Flint and Steel",
+    "icon": "flint_and_steel.png"
+  },
+  {
+    "id": "carrot_on_a_stick",
+    "name": "胡萝卜钓竿",
+    "nameEn": "Carrot on a Stick",
+    "icon": "carrot_on_a_stick.png"
+  },
+  {
+    "id": "warped_fungus_on_a_stick",
+    "name": "诡异菌钓竿",
+    "nameEn": "Warped Fungus on a Stick",
+    "icon": "warped_fungus_on_a_stick.png"
+  },
+  {
+    "id": "brush",
+    "name": "刷子",
+    "nameEn": "Brush",
+    "icon": "brush.png"
+  }
+]
