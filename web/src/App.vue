@@ -4,7 +4,7 @@
       <div class="header-content">
         <div class="logo">
           <div>
-            <h1>铁砧最佳附魔顺序</h1>
+            <h1>铁砧最佳附魔顺序计算器</h1>
             <p class="subtitle">BestEnchSeq</p>
           </div>
         </div>
