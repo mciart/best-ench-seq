@@ -11,10 +11,10 @@ export const useEnchantStore = defineStore('enchant', () => {
     const originDamaged = ref(false)
     const originEnchs = ref([])    // [{id, level}] 初始已有的魔咒
     const neededEnchs = ref([])    // [{id, level}] 需求的魔咒
-    const algorithm = ref('difficultyFirst')
+    const algorithm = ref('enumeration')
     const forgeMode = ref('normal')
     const ignoreCostLimit = ref(false)
-    const enumTimeout = ref(5)      // 枚举算法超时（秒）
+    const enumTimeout = ref(60)      // 枚举算法超时（秒）
 
     // 步骤控制
     const currentStep = ref(1)
