@@ -8,7 +8,7 @@ export const useEnchantStore = defineStore('enchant', () => {
     const edition = ref('java')
     const selectedWeaponId = ref('sword')
     const originPenalty = ref(0)
-    const originDurability = ref(100)
+    const originDamaged = ref(false)
     const originEnchs = ref([])    // [{id, level}] 初始已有的魔咒
     const neededEnchs = ref([])    // [{id, level}] 需求的魔咒
     const algorithm = ref('difficultyFirst')
@@ -112,7 +112,7 @@ export const useEnchantStore = defineStore('enchant', () => {
                 originItem: {
                     name: selectedWeapon.value.name,
                     enchants: originEnchs.value,
-                    durability: originDurability.value,
+                    durability: originDamaged.value ? 0 : 100,
                     penalty: originPenalty.value,
                 },
                 neededEnchs: neededEnchs.value,
@@ -131,7 +131,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         originEnchs.value = []
         neededEnchs.value = []
         originPenalty.value = 0
-        originDurability.value = 100
+        originDamaged.value = false
         result.value = null
         currentStep.value = 1
     }
@@ -161,7 +161,7 @@ export const useEnchantStore = defineStore('enchant', () => {
 
     return {
         // 状态
-        edition, selectedWeaponId, originPenalty, originDurability,
+        edition, selectedWeaponId, originPenalty, originDamaged,
         originEnchs, neededEnchs, algorithm, forgeMode, ignoreCostLimit, enumTimeout,
         currentStep, result, isCalculating,
         // 计算属性

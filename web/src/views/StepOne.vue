@@ -46,11 +46,10 @@
           </div>
         </div>
         <div class="prop-row">
-          <label class="form-label">耐久度 (%)</label>
-          <div class="number-input">
-            <input class="range-slider" type="range" v-model.number="store.originDurability" min="0" max="100">
-            <span class="durability-value">{{ store.originDurability }}%</span>
-          </div>
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="store.originDamaged">
+            <span>物品已受损（非满耐久，铁砧额外 +2 级经验）</span>
+          </label>
         </div>
       </div>
     </div>
@@ -210,45 +209,22 @@ input[type="number"] {
   gap: 16px;
 }
 
-.durability-value {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-primary-light);
-  min-width: 50px;
-  text-align: right;
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
 }
 
-.range-slider {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 160px;
-  height: 6px;
-  background: var(--bg-surface-3);
-  border-radius: 3px;
-  outline: none;
+.checkbox-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
   cursor: pointer;
 }
 
-.range-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  cursor: pointer;
-  border: 2px solid var(--color-primary-light);
-  box-shadow: 0 0 8px var(--color-primary-glow);
-}
-
-.range-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  cursor: pointer;
-  border: 2px solid var(--color-primary-light);
-}
 
 .origin-enchs {
   display: grid;
