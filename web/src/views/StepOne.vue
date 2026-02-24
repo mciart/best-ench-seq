@@ -229,7 +229,7 @@
           <span class="inapplicable-enchs">
             {{ item.enchants.map(e => store.getEnchName(e.id) + ' ' + store.intToRoman(e.level)).join('、') }}
           </span>
-          <button class="btn btn-sm btn-danger" @click="store.removeFromPool(index)">移除</button>
+          <button class="btn btn-sm btn-danger" @click="store.removeFromPool(item.uid)">移除</button>
         </div>
       </div>
     </div>
