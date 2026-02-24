@@ -58,7 +58,8 @@
               <div class="flow-item-label">A 目标</div>
               <div class="flow-item-name">{{ itemDisplayName(step.target.name) }}</div>
               <div class="flow-enchants">
-                <span class="flow-ench" v-for="e in step.target.enchants" :key="e.id">
+                <span class="flow-ench" v-for="e in getDisplayEnchants(step.target)" :key="e.id"
+                  :class="{ 'ench-removed': e.removed }">
                   {{ store.getEnchName(e.id) }} {{ store.intToRoman(e.level) }}
                 </span>
               </div>
@@ -68,7 +69,18 @@
               <div class="flow-item-label">B 牺牲</div>
               <div class="flow-item-name">{{ itemDisplayName(step.sacrifice.name) }}</div>
               <div class="flow-enchants">
-                <span class="flow-ench" v-for="e in step.sacrifice.enchants" :key="e.id">
+                <span class="flow-ench" v-for="e in getDisplayEnchants(step.sacrifice)" :key="e.id"
+                  :class="{ 'ench-removed': e.removed }">
+                  {{ store.getEnchName(e.id) }} {{ store.intToRoman(e.level) }}
+                </span>
+              </div>
+            </div>
+            <div class="flow-equals">=</div>
+            <div class="flow-item flow-result">
+              <div class="flow-item-label">结果</div>
+              <div class="flow-item-name">{{ itemDisplayName(step.target.name) }}</div>
+              <div class="flow-enchants">
+                <span class="flow-ench" v-for="e in getMergedEnchants(step)" :key="e.id">
                   {{ store.getEnchName(e.id) }} {{ store.intToRoman(e.level) }}
                 </span>
               </div>
@@ -114,12 +126,35 @@
 <script setup>
 import { useEnchantStore } from '../stores/enchant.js'
 import { ENCHANTED_BOOK } from '@core/types.js'
+import { mergeItems } from '@core/forge.js'
 
 const store = useEnchantStore()
 
 function itemDisplayName(name) {
   if (name === ENCHANTED_BOOK || name === '') return '附魔书'
   return store.getItemDisplayName(name) || name
+}
+
+/**
+ * 获取显示用附魔列表
+ * 如果物品有 originalEnchants，显示完整原始附魔，被移除的标记 removed
+ */
+function getDisplayEnchants(item) {
+  if (!item.originalEnchants) return item.enchants.map(e => ({ ...e, removed: false }))
+
+  const activeIds = new Set(item.enchants.map(e => e.id))
+  return item.originalEnchants.map(e => ({
+    ...e,
+    removed: !activeIds.has(e.id),
+  }))
+}
+
+/**
+ * 计算合并后的附魔结果
+ */
+function getMergedEnchants(step) {
+  const merged = mergeItems(step.target, step.sacrifice)
+  return merged.enchants
 }
 
 function exportResult() {
@@ -134,11 +169,15 @@ function exportResult() {
     const s = r.steps[i]
     text += `(${i + 1}) 花费: ${s.cost} 级\n`
     text += `  A. ${itemDisplayName(s.target.name)}\n`
-    for (const e of s.target.enchants) {
-      text += `     - ${store.getEnchName(e.id)} ${store.intToRoman(e.level)}\n`
+    for (const e of getDisplayEnchants(s.target)) {
+      text += `     ${e.removed ? '✗' : '-'} ${store.getEnchName(e.id)} ${store.intToRoman(e.level)}${e.removed ? ' (冲突丢弃)' : ''}\n`
     }
     text += `  B. ${itemDisplayName(s.sacrifice.name)}\n`
-    for (const e of s.sacrifice.enchants) {
+    for (const e of getDisplayEnchants(s.sacrifice)) {
+      text += `     ${e.removed ? '✗' : '-'} ${store.getEnchName(e.id)} ${store.intToRoman(e.level)}${e.removed ? ' (冲突丢弃)' : ''}\n`
+    }
+    text += `  => ${itemDisplayName(s.target.name)}\n`
+    for (const e of getMergedEnchants(s)) {
       text += `     - ${store.getEnchName(e.id)} ${store.intToRoman(e.level)}\n`
     }
     text += `\n`
@@ -284,19 +323,22 @@ function exportResult() {
 
 .flow-body {
   display: grid;
-  grid-template-columns: 1fr auto 1fr;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
   gap: 12px;
   padding: 14px 16px;
   align-items: start;
 }
 
-.flow-plus {
+.flow-plus,
+.flow-equals {
   display: flex;
   align-items: center;
   font-size: 1.5rem;
   color: var(--text-dim);
   padding-top: 20px;
 }
+
+
 
 .flow-item-label {
   font-size: 0.75rem;
@@ -322,7 +364,19 @@ function exportResult() {
   color: var(--color-primary-light);
 }
 
-/* 最终物品 */
+.flow-ench.ench-removed {
+  text-decoration: line-through;
+  color: var(--text-dim);
+  opacity: 0.5;
+}
+
+.flow-result .flow-item-label {
+  color: var(--color-success);
+}
+
+.flow-result .flow-ench {
+  color: var(--color-success);
+}
 .output-enchants {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));

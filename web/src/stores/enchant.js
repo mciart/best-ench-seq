@@ -255,10 +255,14 @@ export const useEnchantStore = defineStore('enchant', () => {
             }
         }
 
-        // 深拷贝并过滤
+        // 深拷贝并过滤，保留原始附魔用于显示
         const items = JSON.parse(JSON.stringify(itemPool.value))
         for (const item of items) {
-            item.enchants = item.enchants.filter(e => !removeIds.has(e.id))
+            const hasRemoved = item.enchants.some(e => removeIds.has(e.id))
+            if (hasRemoved) {
+                item.originalEnchants = [...item.enchants]  // 保存原始附魔
+                item.enchants = item.enchants.filter(e => !removeIds.has(e.id))
+            }
         }
         // 移除空书
         return items.filter(i => i.type !== 'enchanted_book' || i.enchants.length > 0)

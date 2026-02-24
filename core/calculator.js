@@ -72,7 +72,10 @@ export function calculateFromPool(options) {
         const enchants = (item.enchants || []).map(e => createEnch(e.id, e.level))
         const durability = item.damaged ? 0 : 100
         const penalty = item.penalty ?? 0
-        pool.add(createItem(name, enchants, durability, penalty))
+        const origEnchs = item.originalEnchants
+            ? item.originalEnchants.map(e => createEnch(e.id, e.level))
+            : null
+        pool.add(createItem(name, enchants, durability, penalty, origEnchs))
     }
 
     // 固定使用枚举搜索

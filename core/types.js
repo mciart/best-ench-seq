@@ -38,12 +38,13 @@ export function createEnch(id, level) {
  * @param {number} penalty - 累积惩罚值（铁砧使用次数）
  * @returns {{ name: string, enchants: Array, durability: number, penalty: number }}
  */
-export function createItem(name, enchants = [], durability = 100, penalty = 0) {
+export function createItem(name, enchants = [], durability = 100, penalty = 0, originalEnchants = null) {
   return {
     name,
     enchants: enchants.map(e => ({ ...e })),
     durability,
     penalty,
+    ...(originalEnchants ? { originalEnchants: originalEnchants.map(e => ({ ...e })) } : {}),
   }
 }
 
@@ -53,7 +54,7 @@ export function createItem(name, enchants = [], durability = 100, penalty = 0) {
  * @returns {Object}
  */
 export function cloneItem(item) {
-  return createItem(item.name, item.enchants, item.durability, item.penalty)
+  return createItem(item.name, item.enchants, item.durability, item.penalty, item.originalEnchants || null)
 }
 
 /**
