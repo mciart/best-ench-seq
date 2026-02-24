@@ -63,6 +63,44 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
     }
 
     /**
+     * 计算目标物品合并所有剩余书后的最大可能附魔价值（乐观上界）
+     * 用于剪枝：如果上界 <= bestEnchValue 且成本也不优，直接跳过
+     */
+    function maxPossibleEV(currentItems) {
+        // 找目标物品
+        const target = currentItems.find(i => i.name !== ENCHANTED_BOOK && i.name !== '')
+        if (!target) {
+            // 全是书：合并所有书后的最大价值
+            const allEnchs = new Map()
+            for (const item of currentItems) {
+                for (const e of item.enchants) {
+                    const cur = allEnchs.get(e.id) || 0
+                    allEnchs.set(e.id, Math.max(cur, e.level))
+                }
+            }
+            let val = 0
+            for (const level of allEnchs.values()) val += level
+            return val
+        }
+        // 合并目标已有附魔 + 所有书的附魔（取每种的最高等级）
+        const enchMap = new Map()
+        for (const e of target.enchants) {
+            enchMap.set(e.id, e.level)
+        }
+        for (const item of currentItems) {
+            if (item === target) continue
+            for (const e of item.enchants) {
+                const cur = enchMap.get(e.id) || 0
+                // 乐观估计：同 ID 魔咒可以合并提升（实际取 max 或 +1）
+                enchMap.set(e.id, Math.max(cur, e.level))
+            }
+        }
+        let val = 0
+        for (const level of enchMap.values()) val += level
+        return val
+    }
+
+    /**
      * 递归搜索所有合并方案
      * @param {Array} currentItems - 当前物品池
      * @param {Array} currentSteps - 已记录的步骤
@@ -72,14 +110,12 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
         if (timedOut) return
 
         // === 候选解评估 ===
-        // 找到池中的目标物品（非书）或唯一物品
         const target = currentItems.find(i => i.name !== ENCHANTED_BOOK && i.name !== '')
         const resultItem = target || (currentItems.length === 1 ? currentItems[0] : null)
 
         if (resultItem) {
             const ev = enchValue(resultItem)
             checked++
-            // 更优解：附魔价值更高，或者价值相同但成本更低
             if (ev > bestEnchValue || (ev === bestEnchValue && currentCost < bestCost)) {
                 bestEnchValue = ev
                 bestCost = currentCost
@@ -87,17 +123,13 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
             }
         }
 
-        // 剪枝：当前成本已 >= 已知最优且无法获得更多附魔 → 跳过
-        // （保守剪枝：只在附魔价值不可能提高时根据成本剪枝）
-        if (bestEnchValue > 0 && currentCost >= bestCost) {
-            // 检查池中是否还有未合入的附魔可以提升价值
-            // 简化：如果只剩目标物品，没有书可以合入了
-            const booksRemaining = currentItems.filter(i => i.name === ENCHANTED_BOOK || i.name === '')
-            if (booksRemaining.length === 0 && currentCost >= bestCost) return
-        }
-
         // 不足 2 个物品则无法再合并
         if (currentItems.length <= 1) return
+
+        // === 剪枝 A: 乐观上界剪枝 ===
+        // 即使合并所有剩余物品也达不到更高 enchValue → 只需比较成本
+        const upperEV = maxPossibleEV(currentItems)
+        if (upperEV <= bestEnchValue && currentCost >= bestCost) return
 
         // 超时检查
         checked++
@@ -118,34 +150,40 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
                 // 两个非书物品必须是同类型才能合并
                 if (!aIsBook && !bIsBook && itemA.name !== itemB.name) continue
 
-                // 确定要尝试的合并方向
-                // 武器必须做目标（左侧），两本书则尝试双向
-                const orders = []
-                if (!aIsBook && bIsBook) {
-                    // A 是武器，B 是书 → A 做目标
-                    orders.push([itemA, itemB])
-                } else if (aIsBook && !bIsBook) {
-                    // B 是武器，A 是书 → B 做目标
-                    orders.push([itemB, itemA])
-                } else {
-                    // 两本书或两个武器 → 尝试双向
-                    orders.push([itemA, itemB])
-                    orders.push([itemB, itemA])
+                // === 剪枝 B: 对称性剪枝 ===
+                // 两本「完全相同附魔」的书只需尝试一个方向
+                let tryBothOrders = true
+                if (aIsBook && bIsBook) {
+                    const aKey = itemA.enchants.map(e => e.id + ':' + e.level).sort().join(',')
+                    const bKey = itemB.enchants.map(e => e.id + ':' + e.level).sort().join(',')
+                    if (aKey === bKey && itemA.penalty === itemB.penalty) {
+                        tryBothOrders = false
+                    }
                 }
 
-                for (const [target, sacrifice] of orders) {
-                    const step = calcForgeCost(target, sacrifice, forgeMode, edition)
+                // 确定要尝试的合并方向
+                const orders = []
+                if (!aIsBook && bIsBook) {
+                    orders.push([itemA, itemB])
+                } else if (aIsBook && !bIsBook) {
+                    orders.push([itemB, itemA])
+                } else {
+                    orders.push([itemA, itemB])
+                    if (tryBothOrders) orders.push([itemB, itemA])
+                }
+
+                for (const [tgt, sac] of orders) {
+                    const step = calcForgeCost(tgt, sac, forgeMode, edition)
 
                     // 剪枝 1: 单步超过 40 级上限
                     if (!ignoreCostLimit && step.cost >= 40) continue
 
-                    // 剪枝 2: 如果当前附魔价值已达最优，累计费用超过最优解则跳过
-                    // 注意：如果合并可能提升 enchValue，即使成本更高也要探索
-                    const merged = mergeItems(target, sacrifice)
+                    // 剪枝 2: enchValue 和成本双指标
+                    const merged = mergeItems(tgt, sac)
                     const mergedEV = enchValue(merged)
                     if (mergedEV <= bestEnchValue && currentCost + step.cost >= bestCost) continue
 
-                    // 构建新的物品池（去掉 i 和 j，加入合并结果）
+                    // 构建新的物品池
                     const remaining = []
                     for (let k = 0; k < currentItems.length; k++) {
                         if (k !== i && k !== j) remaining.push(currentItems[k])
