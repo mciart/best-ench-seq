@@ -27,7 +27,7 @@ import { calcForgeCost, mergeItems, enchantmentMap } from '../forge.js'
  * @returns {{ steps: Array, totalCost: number, maxStepCost: number, feasible: boolean, timedOut: boolean, permutationsChecked: number }}
  */
 export function enumeration(pool, forgeMode, edition, options = {}) {
-    const { timeout = 5000, ignoreCostLimit = false } = options
+    const { timeout = 5000, ignoreCostLimit = false, onProgress = null } = options
 
     // 收集所有物品
     const items = []
@@ -152,11 +152,16 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
         const upperEV = maxPossibleEV(currentItems)
         if (upperEV <= bestEnchValue && currentCost >= bestCost) return
 
-        // 超时检查
+        // 超时检查 + 进度回调
         checked++
-        if (checked % 5000 === 0 && Date.now() - startTime > timeout) {
-            timedOut = true
-            return
+        if (checked % 5000 === 0) {
+            if (onProgress) {
+                onProgress({ checked, bestCost, bestEnchValue })
+            }
+            if (Date.now() - startTime > timeout) {
+                timedOut = true
+                return
+            }
         }
 
         // 尝试所有 (i, j) 配对

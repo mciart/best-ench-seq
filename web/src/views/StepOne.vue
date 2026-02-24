@@ -248,7 +248,15 @@
           开始计算
         </button>
         <template v-else>
-          <span class="calc-timer">计算中… {{ formatElapsed(store.calcElapsed) }}</span>
+          <div class="calc-progress">
+            <div class="calc-progress-bar">
+              <div class="calc-progress-pulse"></div>
+            </div>
+            <div class="calc-progress-info">
+              <span>已搜索 {{ store.calcProgress.toLocaleString() }} 种排列</span>
+              <span class="calc-timer">{{ formatElapsed(store.calcElapsed) }}</span>
+            </div>
+          </div>
           <button class="btn btn-danger" @click="store.cancelCalculation()">
             取消
           </button>
@@ -714,6 +722,40 @@ details[open] .options-summary::after {
 
 .calc-timer {
   font-size: 0.9rem;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.calc-progress {
+  flex: 1;
+  min-width: 200px;
+}
+
+.calc-progress-bar {
+  height: 4px;
+  background: rgba(138, 92, 246, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.calc-progress-pulse {
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
+  border-radius: 2px;
+  animation: pulse-slide 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-slide {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+
+.calc-progress-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82rem;
   color: var(--color-primary-light);
   font-variant-numeric: tabular-nums;
 }

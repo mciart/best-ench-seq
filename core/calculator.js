@@ -59,6 +59,7 @@ export function calculateFromPool(options) {
         forgeMode = ForgeMode.NORMAL,
         ignoreCostLimit = false,
         timeout = 60000,
+        onProgress = null,
     } = options
 
     const startTime = performance.now()
@@ -75,7 +76,7 @@ export function calculateFromPool(options) {
     }
 
     // 固定使用枚举搜索
-    const enumResult = enumeration(pool, forgeMode, edition, { timeout, ignoreCostLimit })
+    const enumResult = enumeration(pool, forgeMode, edition, { timeout, ignoreCostLimit, onProgress })
     const steps = enumResult.steps
 
     // 计算汇总数据

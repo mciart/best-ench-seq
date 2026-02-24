@@ -28,6 +28,7 @@ export const useEnchantStore = defineStore('enchant', () => {
     const result = ref(null)
     const isCalculating = ref(false)
     const calcElapsed = ref(0)          // 已用时间（秒）
+    const calcProgress = ref(0)         // 已搜索排列数
     let calcTimer = null
     let calcWorker = null
 
@@ -165,6 +166,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         if (!canCalculate.value) return
         isCalculating.value = true
         calcElapsed.value = 0
+        calcProgress.value = 0
 
         // 启动计时器
         const startTime = Date.now()
@@ -183,11 +185,15 @@ export const useEnchantStore = defineStore('enchant', () => {
                 if (type === 'result') {
                     result.value = payload
                     currentStep.value = 2
+                    cleanup()
+                    resolve()
+                } else if (type === 'progress') {
+                    calcProgress.value = payload.checked
                 } else if (type === 'error') {
                     console.error('Worker error:', payload)
+                    cleanup()
+                    resolve()
                 }
-                cleanup()
-                resolve()
             }
 
             calcWorker.onerror = (err) => {
@@ -228,6 +234,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         calcTimer = null
         isCalculating.value = false
         calcElapsed.value = 0
+        calcProgress.value = 0
     }
 
     function reset() {
@@ -280,7 +287,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         // 状态
         edition, editingItemType, editingPenalty, editingDamaged, editingEnchs,
         itemPool, forgeMode, ignoreCostLimit, enumTimeout,
-        currentStep, result, isCalculating, calcElapsed,
+        currentStep, result, isCalculating, calcElapsed, calcProgress,
         // 计算属性
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
