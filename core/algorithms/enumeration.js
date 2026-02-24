@@ -15,7 +15,7 @@
  */
 
 import { ENCHANTED_BOOK } from '../types.js'
-import { calcForgeCost, mergeItems } from '../forge.js'
+import { calcForgeCost, mergeItems, enchantmentMap } from '../forge.js'
 
 /**
  * @param {import('../itemPool.js').ItemPool} pool - 物品池
@@ -63,40 +63,61 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
     }
 
     /**
-     * 计算目标物品合并所有剩余书后的最大可能附魔价值（乐观上界）
-     * 用于剪枝：如果上界 <= bestEnchValue 且成本也不优，直接跳过
+     * 计算目标物品合并所有剩余物品后的最大可能附魔价值（乐观上界）
+     * 考虑同级合并升级（如 2×锋利IV → 锋利V）
      */
     function maxPossibleEV(currentItems) {
-        // 找目标物品
+        // 收集所有物品中每种附魔的全部等级
+        const enchLevels = new Map()   // id → [level, level, ...]
         const target = currentItems.find(i => i.name !== ENCHANTED_BOOK && i.name !== '')
-        if (!target) {
-            // 全是书：合并所有书后的最大价值
-            const allEnchs = new Map()
-            for (const item of currentItems) {
-                for (const e of item.enchants) {
-                    const cur = allEnchs.get(e.id) || 0
-                    allEnchs.set(e.id, Math.max(cur, e.level))
-                }
-            }
-            let val = 0
-            for (const level of allEnchs.values()) val += level
-            return val
-        }
-        // 合并目标已有附魔 + 所有书的附魔（取每种的最高等级）
-        const enchMap = new Map()
-        for (const e of target.enchants) {
-            enchMap.set(e.id, e.level)
-        }
+
         for (const item of currentItems) {
-            if (item === target) continue
             for (const e of item.enchants) {
-                const cur = enchMap.get(e.id) || 0
-                // 乐观估计：同 ID 魔咒可以合并提升（实际取 max 或 +1）
-                enchMap.set(e.id, Math.max(cur, e.level))
+                if (!enchLevels.has(e.id)) enchLevels.set(e.id, [])
+                enchLevels.get(e.id).push(e.level)
             }
         }
+
+        // 对每种附魔，贪心模拟最优合并：同级两两配对 → 升一级
         let val = 0
-        for (const level of enchMap.values()) val += level
+        for (const [id, levels] of enchLevels) {
+            // 获取最大等级限制（如果有的话）
+            const maxLevel = enchantmentMap.get(id)?.maxLevel ?? 255
+            // 贪心合并：反复把同等级的两个配对升级
+            let current = [...levels]
+            let changed = true
+            while (changed) {
+                changed = false
+                current.sort((a, b) => b - a) // 从高到低
+                const next = []
+                const used = new Set()
+                for (let i = 0; i < current.length; i++) {
+                    if (used.has(i)) continue
+                    // 找配对：同级且未到 maxLevel
+                    let paired = false
+                    if (current[i] < maxLevel) {
+                        for (let j = i + 1; j < current.length; j++) {
+                            if (used.has(j)) continue
+                            if (current[j] === current[i]) {
+                                next.push(current[i] + 1)
+                                used.add(i)
+                                used.add(j)
+                                paired = true
+                                changed = true
+                                break
+                            }
+                        }
+                    }
+                    if (!paired) {
+                        next.push(current[i])
+                        used.add(i)
+                    }
+                }
+                current = next
+            }
+            // 取最高等级作为该附魔的上界
+            val += Math.max(...current)
+        }
         return val
     }
 

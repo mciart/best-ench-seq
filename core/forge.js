@@ -8,7 +8,7 @@ import { ENCHANTED_BOOK, ForgeMode, createEnch, createStep, cloneItem } from './
 import enchantmentsData from './data/enchantments.json'
 
 // 构建魔咒查找表（启动时一次性创建）
-const enchantmentMap = new Map()
+export const enchantmentMap = new Map()
 for (const e of enchantmentsData) {
     enchantmentMap.set(e.id, e)
 }
