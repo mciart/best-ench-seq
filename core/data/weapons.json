@@ -30,6 +30,12 @@
     "icon": "netherite_hoe.png"
   },
   {
+    "id": "spear",
+    "name": "矛",
+    "nameEn": "Spear",
+    "icon": "spear.png"
+  },
+  {
     "id": "helmet",
     "name": "头盔",
     "nameEn": "Helmet",
@@ -84,12 +90,6 @@
     "icon": "mace.png"
   },
   {
-    "id": "spear",
-    "name": "矛",
-    "nameEn": "Spear",
-    "icon": "spear.png"
-  },
-  {
     "id": "shield",
     "name": "盾牌",
     "nameEn": "Shield",
@@ -114,6 +114,12 @@
     "icon": "flint_and_steel.png"
   },
   {
+    "id": "brush",
+    "name": "刷子",
+    "nameEn": "Brush",
+    "icon": "brush.png"
+  },
+  {
     "id": "carrot_on_a_stick",
     "name": "胡萝卜钓竿",
     "nameEn": "Carrot on a Stick",
@@ -124,11 +130,5 @@
     "name": "诡异菌钓竿",
     "nameEn": "Warped Fungus on a Stick",
     "icon": "warped_fungus_on_a_stick.png"
-  },
-  {
-    "id": "brush",
-    "name": "刷子",
-    "nameEn": "Brush",
-    "icon": "brush.png"
   }
 ]
