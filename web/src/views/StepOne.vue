@@ -172,9 +172,12 @@
 
     <!-- 物品池列表 -->
     <div class="card" v-if="store.poolCount > 0">
-      <div class="card-title">
-        物品池
-        <span class="tag tag-purple">{{ store.poolCount }} 个物品</span>
+      <div class="card-title pool-header">
+        <div>
+          物品池
+          <span class="tag tag-purple">{{ store.poolCount }} 个物品</span>
+        </div>
+        <button class="btn-clear" @click="store.clearPool()" title="清空物品池">清空</button>
       </div>
       <div class="pool-list">
         <div class="pool-item" v-for="item in sortedPool" :key="item.uid">
@@ -253,7 +256,7 @@
               <div class="calc-progress-pulse"></div>
             </div>
             <div class="calc-progress-info">
-              <span>已搜索 {{ store.calcProgress.toLocaleString() }} 种排列</span>
+              <span>搜索中…</span>
               <span class="calc-timer">{{ formatElapsed(store.calcElapsed) }}</span>
             </div>
           </div>
@@ -577,6 +580,27 @@ input[type="number"] {
 }
 
 /* 物品池列表 */
+.pool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-clear {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-dim);
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-clear:hover {
+  border-color: rgba(220, 53, 69, 0.6);
+  color: #dc3545;
+  background: rgba(220, 53, 69, 0.08);
+}
 .pool-list {
   display: flex;
   flex-direction: column;

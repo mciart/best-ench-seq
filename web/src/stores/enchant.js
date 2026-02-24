@@ -162,6 +162,11 @@ export const useEnchantStore = defineStore('enchant', () => {
         itemPool.value = itemPool.value.filter(i => i.uid !== uid)
     }
 
+    /** 清空物品池 */
+    function clearPool() {
+        itemPool.value = []
+    }
+
     async function runCalculation() {
         if (!canCalculate.value) return
         isCalculating.value = true
@@ -295,7 +300,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         // 方法
         setEdition, setEditingType,
         addEditingEnch, removeEditingEnch, updateEditingEnchLevel,
-        addToPool, removeFromPool,
+        addToPool, removeFromPool, clearPool,
         runCalculation, cancelCalculation, reset,
         getEnchName, getEnchData, getItemDisplayName, getItemIcon,
         intToRoman,
