@@ -167,7 +167,7 @@
         <span class="tag tag-purple">{{ store.poolCount }} 个物品</span>
       </div>
       <div class="pool-list">
-        <div class="pool-item" v-for="item in store.itemPool" :key="item.uid">
+        <div class="pool-item" v-for="item in sortedPool" :key="item.uid">
           <div class="pool-item-left">
             <img class="pool-icon" :src="`/icons/${store.getItemIcon(item.type)}`" :alt="store.getItemDisplayName(item.type)">
             <div class="pool-item-info">
@@ -241,10 +241,20 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { useEnchantStore } from '../stores/enchant.js'
 import enchantmentsData from '@core/data/enchantments.json'
 
 const store = useEnchantStore()
+
+// 物品池排序：真实物品在前，附魔书在后
+const sortedPool = computed(() =>
+  [...store.itemPool].sort((a, b) => {
+    const aBook = a.type === 'enchanted_book' ? 1 : 0
+    const bBook = b.type === 'enchanted_book' ? 1 : 0
+    return aBook - bBook
+  })
+)
 
 function getMultiplier(id) {
   const data = enchantmentsData.find(e => e.id === id)
