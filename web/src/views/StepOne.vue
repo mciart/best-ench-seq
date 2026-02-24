@@ -149,11 +149,14 @@
       <div class="add-btn-row">
         <button
           class="btn btn-accent"
-          :disabled="store.isEditingBook && store.editingEnchs.length === 0"
+          :disabled="!store.canAddToPool"
           @click="store.addToPool()"
         >
           + 添加到物品池
         </button>
+        <p class="type-conflict-hint" v-if="!store.isEditingBook && store.poolItemType && store.poolItemType !== store.editingItemType">
+          ⚠ 物品池中已有「{{ store.getItemDisplayName(store.poolItemType) }}」，不同类型物品无法合并
+        </p>
       </div>
     </div>
 
@@ -499,6 +502,12 @@ input[type="number"] {
 .add-btn-row {
   margin-top: 16px;
   text-align: center;
+}
+
+.type-conflict-hint {
+  margin-top: 8px;
+  font-size: 0.82rem;
+  color: var(--color-warning, #f0ad4e);
 }
 
 .btn-accent {

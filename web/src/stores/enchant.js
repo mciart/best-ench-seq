@@ -37,13 +37,25 @@ export const useEnchantStore = defineStore('enchant', () => {
 
     const isEditingBook = computed(() => editingItemType.value === 'enchanted_book')
 
+    /** 物品池中已有的非书物品类型（用于约束后续添加）*/
+    const poolItemType = computed(() => {
+        const realItem = itemPool.value.find(i => i.type !== 'enchanted_book')
+        return realItem ? realItem.type : null
+    })
+
     /** 当前编辑物品类型+版本下可用的魔咒 */
     const availableEnchantments = computed(() => {
         const typeId = editingItemType.value
         return enchantmentsData.filter(ench => {
             if (ench.edition !== 'both' && ench.edition !== edition.value) return false
-            // 附魔书可以放任何附魔
-            if (typeId === 'enchanted_book') return true
+            if (typeId === 'enchanted_book') {
+                // 附魔书：如果池中已有真实物品，只显示该物品类型适用的附魔
+                if (poolItemType.value) {
+                    return ench.suitableWeapons.includes(poolItemType.value)
+                }
+                // 池中没有真实物品时显示所有附魔
+                return true
+            }
             if (!ench.suitableWeapons.includes(typeId)) return false
             return true
         })
@@ -71,6 +83,17 @@ export const useEnchantStore = defineStore('enchant', () => {
 
     /** 物品池中是否至少 2 个物品 */
     const canCalculate = computed(() => itemPool.value.length >= 2)
+
+    /** 当前编辑的物品类型是否可以添加到池中（非书物品必须同类型） */
+    const canAddToPool = computed(() => {
+        const typeId = editingItemType.value
+        if (typeId === 'enchanted_book') {
+            return editingEnchs.value.length > 0
+        }
+        // 非书物品：如果池中已有不同类型的真实物品，不允许添加
+        if (poolItemType.value && poolItemType.value !== typeId) return false
+        return true
+    })
 
     // === 方法 ===
     function setEdition(ed) {
@@ -207,7 +230,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         // 计算属性
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
-        poolCount, hasRealItem, canCalculate,
+        poolCount, poolItemType, hasRealItem, canCalculate, canAddToPool,
         // 方法
         setEdition, setEditingType,
         addEditingEnch, removeEditingEnch, updateEditingEnchLevel,

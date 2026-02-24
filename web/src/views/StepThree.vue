@@ -94,7 +94,7 @@
 
     <!-- 导出 & 导航 -->
     <div class="nav-buttons">
-      <button class="btn btn-secondary" @click="store.currentStep = 2">
+      <button class="btn btn-secondary" @click="store.currentStep = 1">
         ← 修改配置
       </button>
       <div class="nav-right">
