@@ -245,9 +245,9 @@
         >{{ e.name }} <span class="preview-level">{{ store.intToRoman(e.level) }}</span></span>
       </div>
       <div class="preview-redundant" v-if="store.mergePreview.redundant.length > 0">
-        <p class="preview-warn">⚠️ 以下附魔已达到最大等级，部分附魔书是多余的：</p>
+        <p class="preview-warn">💡 以下附魔已达到最大等级，可能存在多余的附魔书：</p>
         <div class="redundant-item" v-for="r in store.mergePreview.redundant" :key="r.id">
-          {{ r.name }}：{{ r.count }} 本多余
+          {{ r.name }}：约 {{ r.count }} 份多余（仅统计该附魔，多附魔书需自行判断）
         </div>
       </div>
     </div>
