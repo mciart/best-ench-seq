@@ -219,17 +219,17 @@
           <label class="form-label">枚举搜索超时</label>
           <div class="timeout-row">
             <input
-              type="range"
-              class="range-slider"
+              type="number"
+              class="form-input timeout-input"
               min="1"
-              max="120"
+              max="60"
               step="1"
               v-model.number="store.enumTimeout"
             >
-            <span class="timeout-value">{{ store.enumTimeout }}s</span>
+            <span class="timeout-unit">分钟</span>
           </div>
           <p class="timeout-hint">
-            物品越多搜索空间越大。建议: 6个以内 1-5s，7-8个 5-15s，9个以上 15-60s
+            物品越多搜索空间越大。7 个物品约 1 秒，10+ 个可能需要数分钟
           </p>
         </div>
       </div>
@@ -238,14 +238,22 @@
     <!-- 计算按钮 -->
     <div class="nav-buttons">
       <div></div>
-      <button
-        class="btn btn-primary btn-lg"
-        :disabled="!store.canCalculate || store.isCalculating"
-        @click="store.runCalculation()"
-      >
-        <span v-if="store.isCalculating" class="loading">计算中...</span>
-        <span v-else>开始计算</span>
-      </button>
+      <div class="calc-area">
+        <button
+          v-if="!store.isCalculating"
+          class="btn btn-primary btn-lg"
+          :disabled="!store.canCalculate"
+          @click="store.runCalculation()"
+        >
+          开始计算
+        </button>
+        <template v-else>
+          <span class="calc-timer">计算中… {{ formatElapsed(store.calcElapsed) }}</span>
+          <button class="btn btn-danger" @click="store.cancelCalculation()">
+            取消
+          </button>
+        </template>
+      </div>
     </div>
   </div>
 </template>
@@ -256,6 +264,13 @@ import { useEnchantStore } from '../stores/enchant.js'
 import enchantmentsData from '@core/data/enchantments.json'
 
 const store = useEnchantStore()
+
+function formatElapsed(seconds) {
+    if (seconds < 60) return `${seconds}s`
+    const m = Math.floor(seconds / 60)
+    const s = seconds % 60
+    return `${m}m${s}s`
+}
 
 // 物品池排序：真实物品在前，附魔书在后
 const sortedPool = computed(() =>
@@ -675,17 +690,46 @@ details[open] .options-summary::after {
   margin-top: 6px;
 }
 
-.timeout-value {
-  font-weight: 600;
+.timeout-input {
+  width: 70px;
+  text-align: center;
+}
+
+.timeout-unit {
   font-size: 0.9rem;
-  color: var(--color-primary-light);
-  min-width: 40px;
+  color: var(--text-dim);
 }
 
 .timeout-hint {
   font-size: 0.78rem;
   color: var(--text-dim);
   margin-top: 4px;
+}
+
+.calc-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.calc-timer {
+  font-size: 0.9rem;
+  color: var(--color-primary-light);
+  font-variant-numeric: tabular-nums;
+}
+
+.btn-danger {
+  background: rgba(220, 53, 69, 0.8);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+.btn-danger:hover {
+  background: rgba(220, 53, 69, 1);
 }
 
 .range-slider {

@@ -21,12 +21,15 @@ export const useEnchantStore = defineStore('enchant', () => {
     // --- 算法选项 ---
     const forgeMode = ref('normal')
     const ignoreCostLimit = ref(false)
-    const enumTimeout = ref(60)
+    const enumTimeout = ref(10)  // 默认 10 分钟
 
     // --- 步骤控制 ---
     const currentStep = ref(1)
     const result = ref(null)
     const isCalculating = ref(false)
+    const calcElapsed = ref(0)          // 已用时间（秒）
+    let calcTimer = null
+    let calcWorker = null
 
     // === 计算属性 ===
     const weapons = computed(() => weaponsData)
@@ -161,19 +164,70 @@ export const useEnchantStore = defineStore('enchant', () => {
     async function runCalculation() {
         if (!canCalculate.value) return
         isCalculating.value = true
-        try {
-            const { calculateFromPool } = await import('@core/calculator.js')
-            result.value = calculateFromPool({
-                edition: edition.value,
-                items: itemPool.value,
-                forgeMode: forgeMode.value,
-                ignoreCostLimit: ignoreCostLimit.value,
-                timeout: enumTimeout.value * 1000,
+        calcElapsed.value = 0
+
+        // 启动计时器
+        const startTime = Date.now()
+        calcTimer = setInterval(() => {
+            calcElapsed.value = Math.round((Date.now() - startTime) / 1000)
+        }, 200)
+
+        return new Promise((resolve) => {
+            calcWorker = new Worker(
+                new URL('../workers/calc.worker.js', import.meta.url),
+                { type: 'module' }
+            )
+
+            calcWorker.onmessage = (e) => {
+                const { type, payload } = e.data
+                if (type === 'result') {
+                    result.value = payload
+                    currentStep.value = 2
+                } else if (type === 'error') {
+                    console.error('Worker error:', payload)
+                }
+                cleanup()
+                resolve()
+            }
+
+            calcWorker.onerror = (err) => {
+                console.error('Worker crashed:', err)
+                cleanup()
+                resolve()
+            }
+
+            calcWorker.postMessage({
+                type: 'calculate',
+                payload: {
+                    edition: edition.value,
+                    items: JSON.parse(JSON.stringify(itemPool.value)),
+                    forgeMode: forgeMode.value,
+                    ignoreCostLimit: ignoreCostLimit.value,
+                    timeout: enumTimeout.value * 60 * 1000, // 分钟 → 毫秒
+                },
             })
-            currentStep.value = 2
-        } finally {
+        })
+
+        function cleanup() {
+            clearInterval(calcTimer)
+            calcTimer = null
+            if (calcWorker) {
+                calcWorker.terminate()
+                calcWorker = null
+            }
             isCalculating.value = false
         }
+    }
+
+    function cancelCalculation() {
+        if (calcWorker) {
+            calcWorker.terminate()
+            calcWorker = null
+        }
+        clearInterval(calcTimer)
+        calcTimer = null
+        isCalculating.value = false
+        calcElapsed.value = 0
     }
 
     function reset() {
@@ -226,7 +280,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         // 状态
         edition, editingItemType, editingPenalty, editingDamaged, editingEnchs,
         itemPool, forgeMode, ignoreCostLimit, enumTimeout,
-        currentStep, result, isCalculating,
+        currentStep, result, isCalculating, calcElapsed,
         // 计算属性
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
@@ -235,7 +289,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         setEdition, setEditingType,
         addEditingEnch, removeEditingEnch, updateEditingEnchLevel,
         addToPool, removeFromPool,
-        runCalculation, reset,
+        runCalculation, cancelCalculation, reset,
         getEnchName, getEnchData, getItemDisplayName, getItemIcon,
         intToRoman,
     }
