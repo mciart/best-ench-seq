@@ -47,7 +47,21 @@ cd web
 npm run build
 ```
 
-构建输出位于 `web/dist/`，可直接部署到 Cloudflare Pages、GitHub Pages 等静态托管服务。
+构建输出位于 `web/dist/`，可直接部署到任何静态托管服务。
+
+### 部署到 EdgeOne Pages / Cloudflare Pages
+
+连接 GitHub 仓库后，填写以下构建配置即可自动部署：
+
+| 配置项 | 值 |
+|--------|------|
+| 框架预设 | `Other` / `None` |
+| 根目录 | `./` |
+| 安装命令 | `cd web && npm install` |
+| 构建命令 | `cd web && npm run build` |
+| 输出目录 | `web/dist` |
+
+每次 `git push` 会自动触发构建和部署。
 
 ## 📁 项目结构
 
