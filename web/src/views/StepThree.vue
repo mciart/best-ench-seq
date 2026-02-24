@@ -24,14 +24,14 @@
     <div class="card meta-card">
       <div class="meta-row">
         <span class="meta-label">使用算法</span>
-        <span class="tag tag-purple">枚举搜索</span>
+        <span class="tag tag-purple">DP 搜索</span>
       </div>
       <div class="meta-row">
         <span class="meta-label">计算耗时</span>
         <span>{{ store.result.calcTime }} ms</span>
       </div>
       <div class="meta-row" v-if="store.result.timedOut !== undefined">
-        <span class="meta-label">枚举状态</span>
+        <span class="meta-label">搜索状态</span>
         <span :class="store.result.timedOut ? 'text-warning' : 'text-success'">
           {{ store.result.timedOut ? '超时（部分搜索）' : '完整搜索' }}
           ({{ store.result.permutationsChecked?.toLocaleString() }} 种排列)
@@ -163,7 +163,7 @@ function exportResult() {
   let text = `铁砧附魔最优顺序计算结果\n`
   text += `========================\n`
   text += `步数: ${r.stepCount}  总花费: ${r.totalCost} 级  ${r.feasible ? '可行' : '过于昂贵'}\n`
-  text += `算法: 枚举搜索  耗时: ${r.calcTime}ms\n\n`
+  text += `算法: DP 搜索  耗时: ${r.calcTime}ms\n\n`
 
   for (let i = 0; i < r.steps.length; i++) {
     const s = r.steps[i]

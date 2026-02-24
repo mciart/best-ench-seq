@@ -9,7 +9,7 @@
 import { ENCHANTED_BOOK, ForgeMode, Edition, createItem, createEnch, cloneItem } from './types.js'
 import { calcForgeCost, mergeItems, getAllEnchantments, getEnchantment } from './forge.js'
 import { ItemPool } from './itemPool.js'
-import { enumeration } from './algorithms/enumeration.js'
+import { dpSearch } from './algorithms/dpSearch.js'
 
 import weaponsData from './data/weapons.json'
 
@@ -78,8 +78,8 @@ export function calculateFromPool(options) {
         pool.add(createItem(name, enchants, durability, penalty, origEnchs))
     }
 
-    // 固定使用枚举搜索
-    const enumResult = enumeration(pool, forgeMode, edition, { timeout, ignoreCostLimit, onProgress })
+    // 使用状态压缩 DP 搜索（O(3^N)，比穷举快数个数量级）
+    const enumResult = dpSearch(pool, forgeMode, edition, { timeout, ignoreCostLimit, onProgress })
     const steps = enumResult.steps
 
     // 计算汇总数据
@@ -102,7 +102,7 @@ export function calculateFromPool(options) {
         maxStepCost,
         stepCount: steps.length,
         feasible: maxStepCost < 40,
-        algorithm: 'enumeration',
+        algorithm: 'dp',
         calcTime: Math.round(calcTime * 100) / 100,
         timedOut: enumResult.timedOut,
         permutationsChecked: enumResult.permutationsChecked,
