@@ -13,7 +13,7 @@ import { difficultyFirst } from './algorithms/difficultyFirst.js'
 import { hamming } from './algorithms/hamming.js'
 import { enumeration } from './algorithms/enumeration.js'
 
-import weaponsData from './data/weapons.json' assert { type: 'json' }
+import weaponsData from './data/weapons.json'
 
 /**
  * 获取指定武器在指定版本下可用的魔咒列表

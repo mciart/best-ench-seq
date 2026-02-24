@@ -5,7 +5,7 @@
  */
 
 import { ENCHANTED_BOOK, ForgeMode, createEnch, createStep, cloneItem } from './types.js'
-import enchantmentsData from './data/enchantments.json' assert { type: 'json' }
+import enchantmentsData from './data/enchantments.json'
 
 // 构建魔咒查找表（启动时一次性创建）
 const enchantmentMap = new Map()
