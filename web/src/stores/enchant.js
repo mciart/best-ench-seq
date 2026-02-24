@@ -146,9 +146,24 @@ export const useEnchantStore = defineStore('enchant', () => {
         poolConflicts.value.every(g => conflictResolutions.value[g.key])
     )
 
-    /** 物品池中是否至少 2 个物品且所有冲突已解决 */
+    /** 池中是否有至少一个附魔书包含适用于目标物品的附魔 */
+    const hasApplicableBooks = computed(() => {
+        const targetType = poolItemType.value
+        if (!targetType) return true  // 没有目标物品时不限制
+        return itemPool.value.some(item => {
+            if (item.type !== 'enchanted_book') return false
+            return item.enchants.some(e => {
+                const data = enchantmentsData.find(d => d.id === e.id)
+                return data && data.suitableWeapons.includes(targetType)
+            })
+        })
+    })
+
+    /** 物品池中是否至少 2 个物品、所有冲突已解决、且有有效附魔书 */
     const canCalculate = computed(() =>
-        itemPool.value.length >= 2 && (poolConflicts.value.length === 0 || allConflictsResolved.value)
+        itemPool.value.length >= 2
+        && (poolConflicts.value.length === 0 || allConflictsResolved.value)
+        && hasApplicableBooks.value
     )
 
     /** 当前编辑的物品类型是否可以添加到池中（非书物品必须同类型） */
