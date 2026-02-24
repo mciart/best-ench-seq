@@ -86,7 +86,6 @@
           </div>
         </div>
         <div class="output-meta">
-          <span>耐久: {{ store.result.outputItem.durability }}%</span>
           <span>惩罚值: {{ store.result.outputItem.penalty }}</span>
         </div>
       </div>
