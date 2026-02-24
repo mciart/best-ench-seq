@@ -25,7 +25,7 @@ import { computed } from 'vue'
 import { useEnchantStore } from '../stores/enchant.js'
 
 const store = useEnchantStore()
-const steps = ['基本设置', '附魔配置', '计算结果']
+const steps = ['物品池配置', '计算结果']
 
 const lineStyle = computed(() => ({
   width: `${((store.currentStep - 1) / (steps.length - 1)) * 100}%`

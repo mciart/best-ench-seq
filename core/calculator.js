@@ -145,3 +145,68 @@ export function calculate(options) {
         ...extraResult,
     }
 }
+
+/**
+ * 从物品池直接计算（方案 B 入口）
+ * 接受物品数组，固定使用枚举搜索
+ *
+ * @param {Object} options
+ * @param {string} options.edition - 'java' | 'bedrock'
+ * @param {Array} options.items - 物品数组 [{ type, enchants: [{id, level}], penalty, damaged }]
+ * @param {string} [options.forgeMode='normal']
+ * @param {boolean} [options.ignoreCostLimit=false]
+ * @param {number} [options.timeout=60000]
+ * @returns {Object} 计算结果
+ */
+export function calculateFromPool(options) {
+    const {
+        edition = Edition.JAVA,
+        items = [],
+        forgeMode = ForgeMode.NORMAL,
+        ignoreCostLimit = false,
+        timeout = 60000,
+    } = options
+
+    const startTime = performance.now()
+
+    // 构建物品池
+    const pool = new ItemPool()
+
+    for (const item of items) {
+        const name = item.type === 'enchanted_book' ? ENCHANTED_BOOK : item.type
+        const enchants = (item.enchants || []).map(e => createEnch(e.id, e.level))
+        const durability = item.damaged ? 0 : 100
+        const penalty = item.penalty ?? 0
+        pool.add(createItem(name, enchants, durability, penalty))
+    }
+
+    // 固定使用枚举搜索
+    const enumResult = enumeration(pool, forgeMode, edition, { timeout, ignoreCostLimit })
+    const steps = enumResult.steps
+
+    // 计算汇总数据
+    let totalCost = 0
+    let maxStepCost = 0
+    for (const step of steps) {
+        totalCost += step.cost
+        maxStepCost = Math.max(maxStepCost, step.cost)
+    }
+
+    // 获取最终物品
+    const outputItem = pool.count > 0 ? pool.get(0) : null
+
+    const calcTime = performance.now() - startTime
+
+    return {
+        steps,
+        outputItem,
+        totalCost,
+        maxStepCost,
+        stepCount: steps.length,
+        feasible: maxStepCost < 40,
+        algorithm: 'enumeration',
+        calcTime: Math.round(calcTime * 100) / 100,
+        timedOut: enumResult.timedOut,
+        permutationsChecked: enumResult.permutationsChecked,
+    }
+}

@@ -83,6 +83,9 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
                 const aIsBook = itemA.name === ENCHANTED_BOOK || itemA.name === ''
                 const bIsBook = itemB.name === ENCHANTED_BOOK || itemB.name === ''
 
+                // 两个非书物品必须是同类型才能合并
+                if (!aIsBook && !bIsBook && itemA.name !== itemB.name) continue
+
                 // 确定要尝试的合并方向
                 // 武器必须做目标（左侧），两本书则尝试双向
                 const orders = []

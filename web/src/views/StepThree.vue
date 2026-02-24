@@ -24,7 +24,7 @@
     <div class="card meta-card">
       <div class="meta-row">
         <span class="meta-label">使用算法</span>
-        <span class="tag tag-purple">{{ algorithmName }}</span>
+        <span class="tag tag-purple">枚举搜索</span>
       </div>
       <div class="meta-row">
         <span class="meta-label">计算耗时</span>
@@ -110,20 +110,10 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { useEnchantStore } from '../stores/enchant.js'
 import { ENCHANTED_BOOK } from '@core/types.js'
 
 const store = useEnchantStore()
-
-const algorithmName = computed(() => {
-  const map = {
-    difficultyFirst: '难度优先贪心',
-    hamming: '汉明分层',
-    enumeration: '枚举搜索',
-  }
-  return map[store.result?.algorithm] || store.result?.algorithm
-})
 
 function itemDisplayName(name) {
   if (name === ENCHANTED_BOOK) return '附魔书'

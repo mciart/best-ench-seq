@@ -18,8 +18,7 @@
       <StepIndicator />
       <div class="step-content fade-in" :key="store.currentStep">
         <StepOne v-if="store.currentStep === 1" />
-        <StepTwo v-else-if="store.currentStep === 2" />
-        <StepThree v-else-if="store.currentStep === 3" />
+        <StepThree v-else-if="store.currentStep === 2" />
       </div>
     </main>
 
@@ -36,7 +35,6 @@
 import { useEnchantStore } from './stores/enchant.js'
 import StepIndicator from './components/StepIndicator.vue'
 import StepOne from './views/StepOne.vue'
-import StepTwo from './views/StepTwo.vue'
 import StepThree from './views/StepThree.vue'
 
 const store = useEnchantStore()
