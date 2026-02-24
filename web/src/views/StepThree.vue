@@ -116,8 +116,8 @@ import { ENCHANTED_BOOK } from '@core/types.js'
 const store = useEnchantStore()
 
 function itemDisplayName(name) {
-  if (name === ENCHANTED_BOOK) return '附魔书'
-  return name
+  if (name === ENCHANTED_BOOK || name === '') return '附魔书'
+  return store.getItemDisplayName(name) || name
 }
 
 function exportResult() {
