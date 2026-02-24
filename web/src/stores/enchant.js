@@ -258,8 +258,21 @@ export const useEnchantStore = defineStore('enchant', () => {
                 item.enchants = item.enchants.filter(e => !removeIds.has(e.id))
             }
         }
-        // 移除空书
-        return items.filter(i => i.type !== 'enchanted_book' || i.enchants.length > 0)
+        // 移除空书 + 移除所有附魔都不适用目标物品的书
+        const targetType = items.find(i => i.type !== 'enchanted_book')?.type
+        return items.filter(i => {
+            if (i.type !== 'enchanted_book') return true
+            if (i.enchants.length === 0) return false
+            // 如果池中有目标物品，检查书中是否有任何附魔适用
+            if (targetType) {
+                const hasApplicable = i.enchants.some(e => {
+                    const data = enchantmentsData.find(d => d.id === e.id)
+                    return data && data.suitableWeapons.includes(targetType)
+                })
+                if (!hasApplicable) return false
+            }
+            return true
+        })
     }
 
     async function runCalculation() {
