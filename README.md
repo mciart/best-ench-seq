@@ -54,9 +54,7 @@ npm run build    # 输出到 web/dist/
 | 配置项 | 值 |
 |--------|---------| 
 | 框架预设 | `Other` / `None` |
-| 根目录 | `./` |
-| 安装命令 | `cd web && npm install` |
-| 构建命令 | `cd web && npm run build` |
+| 构建命令 | `npm run build` |
 | 输出目录 | `web/dist` |
 
 </details>
