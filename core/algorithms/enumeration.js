@@ -47,6 +47,20 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
     let timedOut = false
     let bestSteps = null
     let bestCost = Infinity
+    let bestEnchValue = -1  // 目标物品的附魔总价值（越大越好）
+
+    /**
+     * 计算一个物品的附魔价值 = 所有附魔等级之和
+     * 用于比较候选解：先最大化附魔，再最小化成本
+     */
+    function enchValue(item) {
+        if (!item || !item.enchants) return 0
+        let val = 0
+        for (const e of item.enchants) {
+            val += e.level
+        }
+        return val
+    }
 
     /**
      * 递归搜索所有合并方案
@@ -57,15 +71,33 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
     function search(currentItems, currentSteps, currentCost) {
         if (timedOut) return
 
-        // 只剩一个物品 → 搜索完成
-        if (currentItems.length === 1) {
+        // === 候选解评估 ===
+        // 找到池中的目标物品（非书）或唯一物品
+        const target = currentItems.find(i => i.name !== ENCHANTED_BOOK && i.name !== '')
+        const resultItem = target || (currentItems.length === 1 ? currentItems[0] : null)
+
+        if (resultItem) {
+            const ev = enchValue(resultItem)
             checked++
-            if (currentCost < bestCost) {
+            // 更优解：附魔价值更高，或者价值相同但成本更低
+            if (ev > bestEnchValue || (ev === bestEnchValue && currentCost < bestCost)) {
+                bestEnchValue = ev
                 bestCost = currentCost
                 bestSteps = [...currentSteps]
             }
-            return
         }
+
+        // 剪枝：当前成本已 >= 已知最优且无法获得更多附魔 → 跳过
+        // （保守剪枝：只在附魔价值不可能提高时根据成本剪枝）
+        if (bestEnchValue > 0 && currentCost >= bestCost) {
+            // 检查池中是否还有未合入的附魔可以提升价值
+            // 简化：如果只剩目标物品，没有书可以合入了
+            const booksRemaining = currentItems.filter(i => i.name === ENCHANTED_BOOK || i.name === '')
+            if (booksRemaining.length === 0 && currentCost >= bestCost) return
+        }
+
+        // 不足 2 个物品则无法再合并
+        if (currentItems.length <= 1) return
 
         // 超时检查
         checked++
@@ -107,11 +139,11 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
                     // 剪枝 1: 单步超过 40 级上限
                     if (!ignoreCostLimit && step.cost >= 40) continue
 
-                    // 剪枝 2: 累计费用已超过当前最优解
-                    if (currentCost + step.cost >= bestCost) continue
-
-                    // 合并物品
+                    // 剪枝 2: 如果当前附魔价值已达最优，累计费用超过最优解则跳过
+                    // 注意：如果合并可能提升 enchValue，即使成本更高也要探索
                     const merged = mergeItems(target, sacrifice)
+                    const mergedEV = enchValue(merged)
+                    if (mergedEV <= bestEnchValue && currentCost + step.cost >= bestCost) continue
 
                     // 构建新的物品池（去掉 i 和 j，加入合并结果）
                     const remaining = []
@@ -144,7 +176,7 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
         }
     }
 
-    // 更新 pool 为最终物品
+    // 重放最后一步得到最终物品
     if (bestSteps && bestSteps.length > 0) {
         const lastStep = bestSteps[bestSteps.length - 1]
         const finalItem = mergeItems(lastStep.target, lastStep.sacrifice)

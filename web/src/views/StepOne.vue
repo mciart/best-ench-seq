@@ -101,6 +101,16 @@
 
       <!-- 附魔书编辑区 -->
       <div class="editing-area" v-else>
+        <div class="item-props">
+          <div class="prop-row">
+            <label class="form-label">累积惩罚值 (Penalty)</label>
+            <div class="number-input">
+              <button class="btn btn-ghost btn-sm" @click="store.editingPenalty = Math.max(0, store.editingPenalty - 1)">−</button>
+              <input class="form-input" type="number" v-model.number="store.editingPenalty" min="0" max="31">
+              <button class="btn btn-ghost btn-sm" @click="store.editingPenalty++">+</button>
+            </div>
+          </div>
+        </div>
         <div class="ench-section">
           <p class="section-label">选择附魔：</p>
           <div class="selected-enchs" v-if="store.editingEnchs.length > 0">
@@ -172,7 +182,7 @@
             <img class="pool-icon" :src="`/icons/${store.getItemIcon(item.type)}`" :alt="store.getItemDisplayName(item.type)">
             <div class="pool-item-info">
               <span class="pool-item-name">{{ store.getItemDisplayName(item.type) }}</span>
-              <span class="pool-item-meta" v-if="item.type !== 'enchanted_book'">
+              <span class="pool-item-meta" v-if="item.penalty > 0 || (item.type !== 'enchanted_book' && item.damaged)">
                 P:{{ item.penalty }}{{ item.damaged ? ' · 已受损' : '' }}
               </span>
             </div>
