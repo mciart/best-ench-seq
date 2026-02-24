@@ -234,6 +234,24 @@
       </div>
     </div>
 
+    <!-- 合成预览 -->
+    <div class="card preview-card" v-if="store.mergePreview">
+      <div class="card-title preview-title">📋 合成预览</div>
+      <div class="preview-enchants">
+        <span
+          class="preview-tag"
+          v-for="e in store.mergePreview.enchants"
+          :key="e.id"
+        >{{ e.name }} <span class="preview-level">{{ store.intToRoman(e.level) }}</span></span>
+      </div>
+      <div class="preview-redundant" v-if="store.mergePreview.redundant.length > 0">
+        <p class="preview-warn">⚠️ 以下附魔已达到最大等级，部分附魔书是多余的：</p>
+        <div class="redundant-item" v-for="r in store.mergePreview.redundant" :key="r.id">
+          {{ r.name }}：{{ r.count }} 本多余
+        </div>
+      </div>
+    </div>
+
     <!-- 算法选项（折叠） -->
     <details class="card options-card">
       <summary class="card-title options-summary">高级选项</summary>
@@ -691,6 +709,47 @@ input[type="number"] {
   color: #ff6b6b;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.preview-card {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.05);
+}
+.preview-title {
+  color: #10b981;
+}
+.preview-enchants {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.preview-tag {
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #6ee7b7;
+  padding: 4px 12px;
+  border-radius: 16px;
+  font-size: 0.85rem;
+}
+.preview-level {
+  font-weight: 700;
+  margin-left: 2px;
+}
+.preview-redundant {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+.preview-warn {
+  color: #fbbf24;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+.redundant-item {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  padding: 2px 0;
 }
 
 .pool-header {

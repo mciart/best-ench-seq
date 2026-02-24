@@ -182,6 +182,89 @@ export const useEnchantStore = defineStore('enchant', () => {
         && hasApplicableBooks.value
     )
 
+    /**
+     * 合成预览：模拟合并所有物品后的最终附魔结果
+     * 返回 { enchants: [{id, name, level}], redundant: [{id, name, count}] } 或 null
+     */
+    const mergePreview = computed(() => {
+        if (itemPool.value.length < 2) return null
+        const targetType = poolItemType.value
+        if (!targetType) return null
+
+        // 收集被冲突排除的附魔
+        const removeIds = new Set()
+        for (const group of poolConflicts.value) {
+            const chosen = conflictResolutions.value[group.key]
+            if (chosen) {
+                for (const opt of group.options) {
+                    if (opt.id !== chosen) removeIds.add(opt.id)
+                }
+            }
+        }
+
+        // 收集所有附魔等级，按 ID 分组
+        const enchLevels = new Map()  // id → [level, level, ...]
+        for (const item of itemPool.value) {
+            for (const e of item.enchants) {
+                if (removeIds.has(e.id)) continue
+                // 适用性检查
+                const data = enchantmentsData.find(d => d.id === e.id)
+                if (!data) continue
+                if (item.type === 'enchanted_book' && !data.suitableWeapons.includes(targetType)) continue
+                if (!enchLevels.has(e.id)) enchLevels.set(e.id, [])
+                enchLevels.get(e.id).push(e.level)
+            }
+        }
+
+        // 对每种附魔贪心模拟最优合并
+        const enchants = []
+        const redundant = []
+
+        for (const [id, levels] of enchLevels) {
+            const data = enchantmentsData.find(d => d.id === id)
+            const maxLevel = data?.maxLevel ?? 255
+            const totalCount = levels.length
+
+            // 贪心合并：同级两两配对 → 升一级
+            let current = [...levels]
+            let changed = true
+            while (changed) {
+                changed = false
+                current.sort((a, b) => a - b)
+                const next = []
+                let i = 0
+                while (i < current.length) {
+                    if (i + 1 < current.length && current[i] === current[i + 1] && current[i] < maxLevel) {
+                        next.push(current[i] + 1)
+                        i += 2
+                        changed = true
+                    } else {
+                        next.push(current[i])
+                        i++
+                    }
+                }
+                current = next
+            }
+
+            // 最终等级 = 最高的那个（不超过 maxLevel）
+            const finalLevel = Math.min(Math.max(...current), maxLevel)
+            enchants.push({ id, name: data?.name || id, level: finalLevel })
+
+            // 计算多余：totalCount 中有多少是浪费的？
+            // 从 level=minLvl 升到 finalLevel 需要 2^(finalLevel-minLvl) 份
+            if (totalCount > 1) {
+                const minLvl = Math.min(...levels)
+                const neededForMax = Math.pow(2, finalLevel - minLvl)
+                const extra = Math.max(0, totalCount - neededForMax)
+                if (extra > 0) {
+                    redundant.push({ id, name: data?.name || id, count: extra })
+                }
+            }
+        }
+
+        return { enchants, redundant }
+    })
+
     /** 当前编辑的物品类型是否可以添加到池中（非书物品必须同类型） */
     const canAddToPool = computed(() => {
         const typeId = editingItemType.value
@@ -435,7 +518,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         // 计算属性
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
-        poolCount, poolItemType, hasRealItem, canCalculate, canAddToPool,
+        poolCount, poolItemType, hasRealItem, canCalculate, canAddToPool, mergePreview,
         poolConflicts, conflictResolutions, allConflictsResolved, inapplicableBooks,
         // 方法
         setEdition, setEditingType,
