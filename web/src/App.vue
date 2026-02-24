@@ -24,7 +24,7 @@
 
     <footer class="app-footer">
       <p>
-        <a href="https://github.com/Dinosaur-MC/BestEnchSeq" target="_blank">GitHub</a>
+        <a href="https://github.com/mciart/best-ench-seq" target="_blank">GitHub</a>
         · 基于 Minecraft 铁砧机制 · 支持 Java 版 & 基岩版
       </p>
     </footer>

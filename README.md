@@ -27,7 +27,7 @@
 
 ```bash
 # 克隆仓库
-git clone https://github.com/Dinosaur-MC/BestEnchSeq.git
+git clone https://github.com/mciart/best-ench-seq.git
 cd BestEnchSeq
 
 # 安装依赖
