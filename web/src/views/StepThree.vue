@@ -123,10 +123,10 @@ function itemDisplayName(name) {
 function exportResult() {
   if (!store.result) return
   const r = store.result
-  let text = `铁砧最佳附魔顺序计算结果\n`
+  let text = `铁砧附魔最优合并顺序计算结果\n`
   text += `========================\n`
   text += `步数: ${r.stepCount}  总花费: ${r.totalCost} 级  ${r.feasible ? '可行' : '过于昂贵'}\n`
-  text += `算法: ${algorithmName.value}  耗时: ${r.calcTime}ms\n\n`
+  text += `算法: 枚举搜索  耗时: ${r.calcTime}ms\n\n`
 
   for (let i = 0; i < r.steps.length; i++) {
     const s = r.steps[i]
