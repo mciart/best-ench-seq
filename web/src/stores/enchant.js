@@ -52,14 +52,8 @@ export const useEnchantStore = defineStore('enchant', () => {
         const typeId = editingItemType.value
         return enchantmentsData.filter(ench => {
             if (ench.edition !== 'both' && ench.edition !== edition.value) return false
-            if (typeId === 'enchanted_book') {
-                // 附魔书：如果池中已有真实物品，只显示该物品类型适用的附魔
-                if (poolItemType.value) {
-                    return ench.suitableWeapons.includes(poolItemType.value)
-                }
-                // 池中没有真实物品时显示所有附魔
-                return true
-            }
+            // 附魔书：显示所有附魔（含诅咒），因为捡到的书可能有任何附魔
+            if (typeId === 'enchanted_book') return true
             if (!ench.suitableWeapons.includes(typeId)) return false
             return true
         })

@@ -333,9 +333,9 @@ function exportResult() {
 .flow-equals {
   display: flex;
   align-items: center;
+  align-self: center;
   font-size: 1.5rem;
   color: var(--text-dim);
-  padding-top: 20px;
 }
 
 
