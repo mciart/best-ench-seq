@@ -150,13 +150,14 @@ export const useEnchantStore = defineStore('enchant', () => {
     const hasApplicableBooks = computed(() => {
         const targetType = poolItemType.value
         if (!targetType) return true  // 没有目标物品时不限制
-        return itemPool.value.some(item => {
-            if (item.type !== 'enchanted_book') return false
-            return item.enchants.some(e => {
+        const books = itemPool.value.filter(i => i.type === 'enchanted_book')
+        if (books.length === 0) return true  // 没有书时不限制（如两把剑合并）
+        return books.some(item =>
+            item.enchants.some(e => {
                 const data = enchantmentsData.find(d => d.id === e.id)
                 return data && data.suitableWeapons.includes(targetType)
             })
-        })
+        )
     })
 
     /** 检测池中所有附魔都不适用目标物品的书（用于 UI 显示警告） */
