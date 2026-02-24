@@ -201,6 +201,24 @@
       </div>
     </div>
 
+    <!-- 冲突检测 -->
+    <div class="card conflict-card" v-if="store.hasConflicts">
+      <div class="card-title conflict-title">⚠️ 附魔冲突</div>
+      <p class="conflict-desc">以下附魔互相冲突，无法同时存在。请选择每组中要保留的附魔：</p>
+      <div class="conflict-group" v-for="(group, gi) in store.poolConflicts" :key="gi">
+        <div class="conflict-options">
+          <button
+            v-for="ench in uniqueConflictEnchs(group)"
+            :key="ench.id"
+            class="conflict-btn"
+            @click="store.resolveConflict(ench.id, group)"
+          >
+            保留 <strong>{{ ench.name }} {{ store.intToRoman(ench.level) }}</strong>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- 算法选项（折叠） -->
     <details class="card options-card">
       <summary class="card-title options-summary">高级选项</summary>
@@ -281,6 +299,18 @@ function formatElapsed(seconds) {
     const m = Math.floor(seconds / 60)
     const s = seconds % 60
     return `${m}m${s}s`
+}
+
+/** 冲突组去重：相同附魔ID只显示一个选项按钮（取最高等级） */
+function uniqueConflictEnchs(group) {
+    const map = new Map()
+    for (const e of group) {
+        const existing = map.get(e.id)
+        if (!existing || e.level > existing.level) {
+            map.set(e.id, e)
+        }
+    }
+    return [...map.values()]
 }
 
 // 物品池排序：真实物品在前，附魔书在后
@@ -580,6 +610,52 @@ input[type="number"] {
 }
 
 /* 物品池列表 */
+.conflict-card {
+  border: 1px solid rgba(255, 193, 7, 0.4);
+}
+
+.conflict-title {
+  color: #ffc107;
+}
+
+.conflict-desc {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin-bottom: 12px;
+}
+
+.conflict-group {
+  margin-bottom: 10px;
+}
+.conflict-group:last-child {
+  margin-bottom: 0;
+}
+
+.conflict-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.conflict-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.conflict-btn:hover {
+  background: rgba(138, 92, 246, 0.2);
+  border-color: var(--color-primary-light);
+  color: var(--color-primary-light);
+}
+.conflict-btn strong {
+  color: #ffc107;
+}
+
 .pool-header {
   display: flex;
   justify-content: space-between;

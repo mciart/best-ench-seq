@@ -85,8 +85,75 @@ export const useEnchantStore = defineStore('enchant', () => {
     /** 物品池中是否有实际物品（非书）*/
     const hasRealItem = computed(() => itemPool.value.some(i => i.type !== 'enchanted_book'))
 
-    /** 物品池中是否至少 2 个物品 */
-    const canCalculate = computed(() => itemPool.value.length >= 2)
+    /**
+     * 检测物品池中的附魔冲突
+     * 返回: [{ enchants: [{id, name, level, itemUid}], resolved: false }]
+     * 每组是一组互相冲突的附魔，需要用户选择保留哪个
+     */
+    const poolConflicts = computed(() => {
+        // 收集所有附魔及其来源
+        const allEnchs = []
+        for (const item of itemPool.value) {
+            for (const e of item.enchants) {
+                allEnchs.push({ id: e.id, level: e.level, itemUid: item.uid })
+            }
+        }
+
+        // 用 Union-Find 分组冲突附魔
+        const enchIds = [...new Set(allEnchs.map(e => e.id))]
+        const parent = new Map()
+        for (const id of enchIds) parent.set(id, id)
+        function find(x) {
+            if (parent.get(x) !== x) parent.set(x, find(parent.get(x)))
+            return parent.get(x)
+        }
+        function union(a, b) { parent.set(find(a), find(b)) }
+
+        for (const id of enchIds) {
+            const data = enchantmentsData.find(e => e.id === id)
+            if (!data) continue
+            for (const cid of data.conflicts) {
+                if (enchIds.includes(cid)) union(id, cid)
+            }
+        }
+
+        // 按组收集
+        const groups = new Map()
+        for (const id of enchIds) {
+            const root = find(id)
+            if (!groups.has(root)) groups.set(root, [])
+            groups.get(root).push(id)
+        }
+
+        // 只保留有冲突的组（>1 个附魔ID）
+        const conflicts = []
+        for (const [, ids] of groups) {
+            if (ids.length <= 1) continue
+            const enchants = []
+            for (const id of ids) {
+                const data = enchantmentsData.find(e => e.id === id)
+                // 找到这个附魔在哪些物品上
+                for (const e of allEnchs) {
+                    if (e.id === id) {
+                        enchants.push({
+                            id: e.id,
+                            name: data?.name || id,
+                            level: e.level,
+                            itemUid: e.itemUid,
+                        })
+                    }
+                }
+            }
+            conflicts.push(enchants)
+        }
+        return conflicts
+    })
+
+    /** 物品池中是否有未解决的冲突 */
+    const hasConflicts = computed(() => poolConflicts.value.length > 0)
+
+    /** 物品池中是否至少 2 个物品且无冲突 */
+    const canCalculate = computed(() => itemPool.value.length >= 2 && !hasConflicts.value)
 
     /** 当前编辑的物品类型是否可以添加到池中（非书物品必须同类型） */
     const canAddToPool = computed(() => {
@@ -165,6 +232,24 @@ export const useEnchantStore = defineStore('enchant', () => {
     /** 清空物品池 */
     function clearPool() {
         itemPool.value = []
+    }
+
+    /**
+     * 解决附魔冲突 - 保留 keepId，移除同冲突组的其他附魔
+     * @param {string} keepId - 要保留的附魔 ID
+     * @param {Array} conflictGroup - 冲突组 [{id, itemUid}]
+     */
+    function resolveConflict(keepId, conflictGroup) {
+        const removeIds = new Set(
+            conflictGroup.filter(e => e.id !== keepId).map(e => e.id)
+        )
+        for (const item of itemPool.value) {
+            item.enchants = item.enchants.filter(e => !removeIds.has(e.id))
+        }
+        // 移除没有附魔的书（空书无意义）
+        itemPool.value = itemPool.value.filter(
+            i => i.type !== 'enchanted_book' || i.enchants.length > 0
+        )
     }
 
     async function runCalculation() {
@@ -297,10 +382,11 @@ export const useEnchantStore = defineStore('enchant', () => {
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
         poolCount, poolItemType, hasRealItem, canCalculate, canAddToPool,
+        poolConflicts, hasConflicts,
         // 方法
         setEdition, setEditingType,
         addEditingEnch, removeEditingEnch, updateEditingEnchLevel,
-        addToPool, removeFromPool, clearPool,
+        addToPool, removeFromPool, clearPool, resolveConflict,
         runCalculation, cancelCalculation, reset,
         getEnchName, getEnchData, getItemDisplayName, getItemIcon,
         intToRoman,
