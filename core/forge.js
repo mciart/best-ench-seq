@@ -91,6 +91,14 @@ export function calcForgeCost(target, sacrifice, mode, edition) {
         const data = enchantmentMap.get(bEnch.id)
         if (!data) continue
 
+        // 检查附魔对目标物品的适用性（附魔书可以接受任何附魔）
+        if (target.name !== ENCHANTED_BOOK && target.name !== '' &&
+            !data.suitableWeapons.includes(target.name)) {
+            // 不适用的附魔：JE 仍计 1 级费用
+            if (edition === 'java') cost += 1
+            continue
+        }
+
         // 检查冲突
         let conflicting = false
         for (const conflict of data.conflicts) {
@@ -181,6 +189,12 @@ export function mergeItems(target, sacrifice) {
     for (const bEnch of sacrifice.enchants) {
         const data = enchantmentMap.get(bEnch.id)
         if (!data) continue
+
+        // 检查附魔对目标物品的适用性（附魔书可以接受任何附魔）
+        if (result.name !== ENCHANTED_BOOK && result.name !== '' &&
+            !data.suitableWeapons.includes(result.name)) {
+            continue
+        }
 
         // 检查冲突
         let conflicting = false

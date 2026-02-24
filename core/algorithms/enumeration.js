@@ -204,10 +204,7 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
                     // 剪枝 1: 单步超过 40 级上限
                     if (!ignoreCostLimit && step.cost >= 40) continue
 
-                    // 剪枝 2: enchValue 和成本双指标
                     const merged = mergeItems(tgt, sac)
-                    const mergedEV = enchValue(merged)
-                    if (mergedEV <= bestEnchValue && currentCost + step.cost >= bestCost) continue
 
                     // 构建新的物品池
                     const remaining = []
@@ -215,6 +212,10 @@ export function enumeration(pool, forgeMode, edition, options = {}) {
                         if (k !== i && k !== j) remaining.push(currentItems[k])
                     }
                     remaining.push(merged)
+
+                    // 剪枝 2: 乐观上界 — 整个剩余池的最大可能附魔价值
+                    const upperEV = maxPossibleEV(remaining)
+                    if (upperEV <= bestEnchValue && currentCost + step.cost >= bestCost) continue
 
                     // 递归搜索
                     currentSteps.push(step)

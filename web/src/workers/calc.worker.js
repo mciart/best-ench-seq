@@ -8,7 +8,12 @@ self.onmessage = function (e) {
     const { type, payload } = e.data
     if (type === 'calculate') {
         try {
-            const result = calculateFromPool(payload)
+            const result = calculateFromPool({
+                ...payload,
+                onProgress: (info) => {
+                    self.postMessage({ type: 'progress', payload: info })
+                },
+            })
             self.postMessage({ type: 'result', payload: result })
         } catch (err) {
             self.postMessage({ type: 'error', payload: err.message })

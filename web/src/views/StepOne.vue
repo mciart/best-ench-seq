@@ -275,7 +275,7 @@
               <div class="calc-progress-pulse"></div>
             </div>
             <div class="calc-progress-info">
-              <span>搜索中…</span>
+              <span>搜索中… {{ store.calcProgress > 0 ? `(${store.calcProgress.toLocaleString()} 种排列)` : '' }}</span>
               <span class="calc-timer">{{ formatElapsed(store.calcElapsed) }}</span>
             </div>
           </div>
