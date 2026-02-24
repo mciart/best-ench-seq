@@ -39,7 +39,10 @@
       </div>
     </div>
 
-    <!-- 锻造流程 -->
+    <!-- 超时警告 -->
+    <div v-if="store.result.timedOut" class="timeout-warning">
+      ⚠️ 搜索因超时中断，当前结果可能不是全局最优。增加超时时间或减少物品数量可能获得更优方案。
+    </div>
     <div class="card">
       <div class="card-title">锻造流程</div>
       <div class="flow-list">
@@ -223,6 +226,16 @@ function exportResult() {
 
 .text-warning { color: var(--color-warning); }
 .text-success { color: var(--color-success); }
+
+.timeout-warning {
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.4);
+  border-radius: 10px;
+  padding: 12px 16px;
+  color: #ffc107;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
 
 /* 锻造流程 */
 .flow-list {
