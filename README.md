@@ -28,7 +28,7 @@
 ```bash
 # 克隆仓库
 git clone https://github.com/mciart/best-ench-seq.git
-cd BestEnchSeq
+cd best-ench-seq
 
 # 安装依赖
 cd web
