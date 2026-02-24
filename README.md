@@ -55,7 +55,7 @@ npm run build    # 输出到 web/dist/
 |--------|---------| 
 | 框架预设 | `Other` / `None` |
 | 构建命令 | `npm run build` |
-| 输出目录 | `web/dist` |
+| 输出目录 | `dist` |
 
 </details>
 
