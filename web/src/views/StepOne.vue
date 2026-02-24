@@ -220,6 +220,20 @@
       </div>
     </div>
 
+    <!-- 无效附魔书警告 -->
+    <div class="card conflict-card" v-if="store.inapplicableBooks.length > 0">
+      <div class="card-title conflict-title">⚠️ 无效附魔书</div>
+      <p class="conflict-desc">以下附魔书的所有附魔都不适用于「{{ store.getItemDisplayName(store.poolItemType) }}」，将在计算时被忽略：</p>
+      <div class="inapplicable-list">
+        <div class="inapplicable-item" v-for="({ item, index }) in store.inapplicableBooks" :key="index">
+          <span class="inapplicable-enchs">
+            {{ item.enchants.map(e => store.getEnchName(e.id) + ' ' + store.intToRoman(e.level)).join('、') }}
+          </span>
+          <button class="btn btn-sm btn-danger" @click="store.removeFromPool(index)">移除</button>
+        </div>
+      </div>
+    </div>
+
     <!-- 算法选项（折叠） -->
     <details class="card options-card">
       <summary class="card-title options-summary">高级选项</summary>
@@ -648,6 +662,35 @@ input[type="number"] {
   border-color: var(--color-primary-light);
   color: var(--color-primary-light);
   font-weight: 600;
+}
+
+.inapplicable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.inapplicable-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 6px;
+}
+.inapplicable-enchs {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+}
+.btn-sm {
+  padding: 2px 10px;
+  font-size: 0.75rem;
+}
+.btn-danger {
+  background: rgba(220, 53, 69, 0.3);
+  border: 1px solid rgba(220, 53, 69, 0.5);
+  color: #ff6b6b;
+  border-radius: 4px;
+  cursor: pointer;
 }
 
 .pool-header {

@@ -159,6 +159,21 @@ export const useEnchantStore = defineStore('enchant', () => {
         })
     })
 
+    /** 检测池中所有附魔都不适用目标物品的书（用于 UI 显示警告） */
+    const inapplicableBooks = computed(() => {
+        const targetType = poolItemType.value
+        if (!targetType) return []
+        return itemPool.value
+            .map((item, index) => ({ item, index }))
+            .filter(({ item }) => {
+                if (item.type !== 'enchanted_book') return false
+                return item.enchants.every(e => {
+                    const data = enchantmentsData.find(d => d.id === e.id)
+                    return !data || !data.suitableWeapons.includes(targetType)
+                })
+            })
+    })
+
     /** 物品池中是否至少 2 个物品、所有冲突已解决、且有有效附魔书 */
     const canCalculate = computed(() =>
         itemPool.value.length >= 2
@@ -420,7 +435,7 @@ export const useEnchantStore = defineStore('enchant', () => {
         weapons, editingWeapon, isEditingBook,
         availableEnchantments, selectableEnchs,
         poolCount, poolItemType, hasRealItem, canCalculate, canAddToPool,
-        poolConflicts, conflictResolutions, allConflictsResolved,
+        poolConflicts, conflictResolutions, allConflictsResolved, inapplicableBooks,
         // 方法
         setEdition, setEditingType,
         addEditingEnch, removeEditingEnch, updateEditingEnchLevel,
