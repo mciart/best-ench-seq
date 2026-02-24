@@ -27,8 +27,9 @@ import { useEnchantStore } from '../stores/enchant.js'
 const store = useEnchantStore()
 const steps = ['物品池配置', '计算结果']
 
+const progress = computed(() => (store.currentStep - 1) / (steps.length - 1))
 const lineStyle = computed(() => ({
-  width: `${((store.currentStep - 1) / (steps.length - 1)) * 100}%`
+  transform: `scaleX(${progress.value})`,
 }))
 
 function goToStep(step) {
@@ -63,11 +64,13 @@ function goToStep(step) {
   position: absolute;
   top: 18px;
   left: 50px;
+  right: 50px;
   height: 3px;
   background: linear-gradient(90deg, var(--color-primary-dim), var(--color-primary));
   border-radius: 2px;
   z-index: 1;
-  transition: width var(--transition-slow);
+  transition: transform var(--transition-slow);
+  transform-origin: left;
 }
 
 .step-item {
