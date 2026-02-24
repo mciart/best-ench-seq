@@ -43,6 +43,14 @@
     <div v-if="store.result.timedOut" class="timeout-warning">
       ⚠️ 搜索因超时中断，当前结果可能不是全局最优。增加超时时间或减少物品数量可能获得更优方案。
     </div>
+
+    <!-- 跳过物品提示 -->
+    <div v-if="store.result.skippedItems?.length > 0" class="card skipped-card">
+      <div class="card-title skipped-title">💡 以下物品未参与合并（多余）</div>
+      <p class="skipped-desc">算法判定这些物品对最终结果无贡献，你可以保留它们做其他用途。</p>
+      <div class="skipped-count">跳过 {{ store.result.skippedItems.length }} 个物品，实际使用 {{ store.result.usedCount }} 个</div>
+    </div>
+
     <div class="card">
       <div class="card-title">锻造流程</div>
       <div class="flow-list">
@@ -274,6 +282,24 @@ function exportResult() {
   color: #ffc107;
   font-size: 0.88rem;
   line-height: 1.5;
+}
+
+.skipped-card {
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.05);
+}
+.skipped-title {
+  color: #10b981;
+}
+.skipped-desc {
+  color: var(--text-dim);
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+}
+.skipped-count {
+  color: #6ee7b7;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 /* 锻造流程 */

@@ -173,18 +173,43 @@ export function dpSearch(pool, forgeMode, edition, options = {}) {
     }
 
     // ========== 提取最优解 ==========
-    const finalMask = totalMasks - 1
-    const finalStates = dp[finalMask]
+    // 找到目标物品（非书物品）的索引
+    let targetIdx = -1
+    for (let i = 0; i < N; i++) {
+        if (items[i].name !== ENCHANTED_BOOK && items[i].name !== '') {
+            targetIdx = i
+            break
+        }
+    }
 
+    // 遍历所有包含目标物品的 mask（不再强制用完所有物品）
+    // 这样多余的书会被自动跳过
     let bestState = null
-    if (finalStates) {
-        for (const state of finalStates.values()) {
+    let bestMask = 0
+    for (let mask = 1; mask < totalMasks; mask++) {
+        // 必须包含目标物品（如果有的话）
+        if (targetIdx >= 0 && !(mask & (1 << targetIdx))) continue
+        // 至少 2 个物品才有合并
+        if ((mask & (mask - 1)) === 0) continue
+
+        const states = dp[mask]
+        if (!states) continue
+
+        for (const state of states.values()) {
+            // 只考虑合并结果是武器/装备的（不是书）
+            if (targetIdx >= 0) {
+                const isBook = state.item.name === ENCHANTED_BOOK || state.item.name === ''
+                if (isBook) continue
+            }
             if (!bestState) {
                 bestState = state
+                bestMask = mask
             } else if (state.enchValue > bestState.enchValue) {
                 bestState = state
+                bestMask = mask
             } else if (state.enchValue === bestState.enchValue && state.cost < bestState.cost) {
                 bestState = state
+                bestMask = mask
             }
         }
     }
@@ -202,6 +227,14 @@ export function dpSearch(pool, forgeMode, edition, options = {}) {
         }
     }
 
+    // 收集未使用的物品索引
+    const skippedItems = []
+    for (let i = 0; i < N; i++) {
+        if (!(bestMask & (1 << i))) {
+            skippedItems.push(i)
+        }
+    }
+
     // 将最终物品写回 pool（与 enumeration 保持一致的副作用）
     if (bestState && bestState.steps.length > 0) {
         while (pool.count > 0) pool.remove(0)
@@ -215,5 +248,7 @@ export function dpSearch(pool, forgeMode, edition, options = {}) {
         feasible: maxStepCost < 40,
         timedOut,
         permutationsChecked,
+        skippedItems,           // 未使用的物品索引列表
+        usedCount: N - skippedItems.length,  // 实际参与合并的物品数
     }
 }

@@ -106,5 +106,7 @@ export function calculateFromPool(options) {
         calcTime: Math.round(calcTime * 100) / 100,
         timedOut: enumResult.timedOut,
         permutationsChecked: enumResult.permutationsChecked,
+        skippedItems: enumResult.skippedItems || [],
+        usedCount: enumResult.usedCount || items.length,
     }
 }
