@@ -1,4 +1,4 @@
-# ⚒️ BestEnchSeq — Minecraft 铁砧附魔最优顺序计算器
+# BestEnchSeq — Minecraft 铁砧附魔最优顺序计算器
 
 计算在铁砧上附魔的**最优合并顺序**，以最低经验消耗获得满附魔物品。
 
@@ -6,7 +6,7 @@
 
 > 🌐 在线使用：[bes.ozo.ooo](https://bes.ozo.ooo)
 
-## ✨ 功能
+## 功能
 
 - 🎯 **枚举搜索最优解** — 分支定界全搜索，保证找到经验花费最低的合并方案
 - 🔀 **多物品合并** — 支持多个同类预附魔物品 + 附魔书混合计算
@@ -63,7 +63,7 @@ npm run build
 
 每次 `git push` 会自动触发构建和部署。
 
-## 📁 项目结构
+## 项目结构
 
 ```
 BestEnchSeq/
@@ -93,7 +93,7 @@ BestEnchSeq/
 └── README.md
 ```
 
-## 🔄 计算流程
+## 计算流程
 
 ```mermaid
 flowchart TD
@@ -120,7 +120,7 @@ flowchart TD
     P --> Q["锻造流程\n逐步操作指南"]
 ```
 
-## 🎮 使用方法
+## 使用方法
 
 ### 第一步：配置物品池
 
@@ -134,7 +134,7 @@ flowchart TD
 
 查看最优合并顺序、总经验消耗、逐步操作指南。支持导出计算结果。
 
-## 🔧 技术栈
+## 技术栈
 
 | 层级 | 技术 |
 |------|------|
@@ -144,7 +144,7 @@ flowchart TD
 | 核心逻辑 | 原生 JavaScript (ES Modules) |
 | 样式 | CSS (Minecraft 暗色主题) |
 
-## 📊 算法说明
+## 算法说明
 
 ### 枚举搜索 (Enumeration)
 
@@ -157,10 +157,10 @@ flowchart TD
 - **最优优先** — 每步优先探索代价最低的合并，加速收敛
 - **类型约束** — 自动跳过不兼容的物品合并（剑+镐等）
 
-## 📜 物品图标
+## 物品图标
 
 物品图标来源于 [Mojang/bedrock-samples](https://github.com/Mojang/bedrock-samples)（Minecraft 官方基岩版资源包），版权归 Mojang Studios / Microsoft 所有。
 
-## 📄 License
+## License
 
 MIT
