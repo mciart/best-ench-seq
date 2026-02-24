@@ -202,18 +202,19 @@
     </div>
 
     <!-- 冲突检测 -->
-    <div class="card conflict-card" v-if="store.hasConflicts">
+    <div class="card conflict-card" v-if="store.poolConflicts.length > 0">
       <div class="card-title conflict-title">⚠️ 附魔冲突</div>
-      <p class="conflict-desc">以下附魔互相冲突，无法同时存在。请选择每组中要保留的附魔：</p>
-      <div class="conflict-group" v-for="(group, gi) in store.poolConflicts" :key="gi">
+      <p class="conflict-desc">以下附魔互相冲突，请选择每组中要保留的附魔（未选中的将在合成时被铁砧丢弃）：</p>
+      <div class="conflict-group" v-for="group in store.poolConflicts" :key="group.key">
         <div class="conflict-options">
           <button
-            v-for="ench in uniqueConflictEnchs(group)"
-            :key="ench.id"
+            v-for="opt in group.options"
+            :key="opt.id"
             class="conflict-btn"
-            @click="store.resolveConflict(ench.id, group)"
+            :class="{ active: store.conflictResolutions[group.key] === opt.id }"
+            @click="store.resolveConflict(group.key, opt.id)"
           >
-            保留 <strong>{{ ench.name }} {{ store.intToRoman(ench.level) }}</strong>
+            {{ opt.name }}
           </button>
         </div>
       </div>
@@ -301,17 +302,7 @@ function formatElapsed(seconds) {
     return `${m}m${s}s`
 }
 
-/** 冲突组去重：相同附魔ID只显示一个选项按钮（取最高等级） */
-function uniqueConflictEnchs(group) {
-    const map = new Map()
-    for (const e of group) {
-        const existing = map.get(e.id)
-        if (!existing || e.level > existing.level) {
-            map.set(e.id, e)
-        }
-    }
-    return [...map.values()]
-}
+
 
 // 物品池排序：真实物品在前，附魔书在后
 const sortedPool = computed(() =>
@@ -648,12 +639,15 @@ input[type="number"] {
   transition: all 0.2s;
 }
 .conflict-btn:hover {
-  background: rgba(138, 92, 246, 0.2);
+  background: rgba(138, 92, 246, 0.15);
   border-color: var(--color-primary-light);
   color: var(--color-primary-light);
 }
-.conflict-btn strong {
-  color: #ffc107;
+.conflict-btn.active {
+  background: rgba(138, 92, 246, 0.25);
+  border-color: var(--color-primary-light);
+  color: var(--color-primary-light);
+  font-weight: 600;
 }
 
 .pool-header {
